@@ -1,7 +1,10 @@
+/** biome-ignore-all lint/suspicious/useAwait: is allowed here */
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 export async function healthRoute(app: FastifyInstance) {
-  return app.get('/check', async (request: FastifyRequest, reply: FastifyReply) => {
-    return reply.send({ status: 'ok' });
-  });
+  return app.get(
+    "/check",
+    async (_request: FastifyRequest, reply: FastifyReply) =>
+      reply.send({ status: "ok" })
+  );
 }
