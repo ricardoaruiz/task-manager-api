@@ -1,22 +1,29 @@
 /** biome-ignore-all lint/suspicious/useAwait: ignored here */
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyInstance } from 'fastify';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { StatusCodes } from 'http-status-codes';
+import z from 'zod/v4';
 import { db } from '../../database/db.js';
 
-type CompleteTaskParams = {
-  id: string;
-};
+const CompleteTaskParamsSchema = z.object({
+  id: z.uuid('Invalid task ID'),
+});
 
-type CompleteTaskBody = {
-  completed: boolean;
-};
+const CompleteTaskBodySchema = z.object({
+  completed: z.boolean(),
+});
 
 export async function completeTask(app: FastifyInstance) {
-  return app.patch(
-    '/:id',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      const { id } = request.params as CompleteTaskParams;
-      const { completed } = request.body as CompleteTaskBody;
+  return app.withTypeProvider<ZodTypeProvider>().route({
+    method: 'PATCH',
+    url: '/:id',
+    schema: {
+      params: CompleteTaskParamsSchema,
+      body: CompleteTaskBodySchema,
+    },
+    handler: async (request, reply) => {
+      const { id } = request.params;
+      const { completed } = request.body;
 
       const updatedTask = await db('tasks')
         .update({ completed })
@@ -24,6 +31,6 @@ export async function completeTask(app: FastifyInstance) {
         .returning('*');
 
       return reply.status(StatusCodes.OK).send({ data: updatedTask });
-    }
-  );
+    },
+  });
 }

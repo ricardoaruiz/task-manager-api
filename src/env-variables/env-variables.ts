@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noConsole: is allowed here */
 import 'dotenv/config';
-import z from 'zod';
+import z from 'zod/v4';
 import { envVariablesSchema } from './env-variables.schema.js';
 
 const environmentVariables = envVariablesSchema.safeParse(process.env);

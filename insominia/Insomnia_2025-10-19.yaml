@@ -1,0 +1,221 @@
+type: collection.insomnia.rest/5.0
+name: Task Manager
+meta:
+  id: wrk_99967f9f40c24ab89a124c12141e52fb
+  created: 1760823455390
+  modified: 1760890089361
+  description: ""
+collection:
+  - name: Health
+    meta:
+      id: fld_b3e33fcd9ddc4143b9f128cd5aac3359
+      created: 1760890112288
+      modified: 1760890112288
+      sortKey: -1760890112288
+      description: ""
+    children:
+      - url: "{{ _.url }}/health/check"
+        name: Check
+        meta:
+          id: req_c5f45ff0dc384923b4b0f54cb26a0a32
+          created: 1760890115535
+          modified: 1760890193500
+          isPrivate: false
+          description: ""
+          sortKey: -1760890115535
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Tasks
+    meta:
+      id: fld_e3cacd7c07dc44f09ab85a9d12f30ba6
+      created: 1760890203802
+      modified: 1760890203802
+      sortKey: -1760890203802
+      description: ""
+    children:
+      - url: "{{ _.url }}/tasks"
+        name: List
+        meta:
+          id: req_048755e9c7344dbf8f7814b4d38f74f9
+          created: 1760890206399
+          modified: 1760890221521
+          isPrivate: false
+          description: ""
+          sortKey: -1760890206399
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.url }}/tasks"
+        name: Create
+        meta:
+          id: req_c7d90e86c7f049ac986892c1f78f0cfe
+          created: 1760890230812
+          modified: 1760894175848
+          isPrivate: false
+          description: ""
+          sortKey: -1760890230812
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"title": "Teste",
+            	"description": "Testando"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.url }}/tasks/35a228a3-4384-4e97-903e-87a4ba5e1f10"
+        name: Delete
+        meta:
+          id: req_8cd87dbdccc14ff497949951379b71eb
+          created: 1760892082758
+          modified: 1760894351981
+          isPrivate: false
+          description: ""
+          sortKey: -1760890160967
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.url }}/tasks/9dff001d-6c0d-4e25-8036-5fcd67672061"
+        name: Complete
+        meta:
+          id: req_e312fefc4a5248a28ed31def7fceb26b
+          created: 1760892495989
+          modified: 1760894661518
+          isPrivate: false
+          description: ""
+          sortKey: -1760890218605.5
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"completed": true
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.url }}/tasks/9dff001d-6c0d-4e25-8036-5fcd67672061"
+        name: Update
+        meta:
+          id: req_7fd5dec0e7524d609615b37a0f808d0f
+          created: 1760892750791
+          modified: 1760894557349
+          isPrivate: false
+          description: ""
+          sortKey: -1760890224708.75
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"title": "teste",
+            	"description": "testando"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.url }}/tasks/9dff001d-6c0d-4e25-8036-5fcd67672061"
+        name: Get a task
+        meta:
+          id: req_ed2fedc4c230406f9901848847c10921
+          created: 1760894801658
+          modified: 1760894828106
+          isPrivate: false
+          description: ""
+          sortKey: -1760890183683
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e94159930a126e1ae03849f71cca8c7ba607c7f5
+    created: 1760890077751
+    modified: 1760890077751
+environments:
+  name: Base Environment
+  meta:
+    id: env_e94159930a126e1ae03849f71cca8c7ba607c7f5
+    created: 1760823455403
+    modified: 1760890077620
+    isPrivate: false
+  subEnvironments:
+    - name: local
+      meta:
+        id: env_4cc28a600e77470fa5657662cd45596c
+        created: 1760890158403
+        modified: 1760890181804
+        isPrivate: false
+        sortKey: 1760890158403
+      data:
+        url: localhost:3000
+      color: "#46b31e"

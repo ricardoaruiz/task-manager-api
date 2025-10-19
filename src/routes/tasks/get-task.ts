@@ -5,27 +5,23 @@ import { StatusCodes } from 'http-status-codes';
 import z from 'zod/v4';
 import { db } from '../../database/db.js';
 
-const DeleteTaskParamsSchema = z.object({
-  id: z.uuid('Invalid task ID'),
+const GetTaskParamsSchema = z.object({
+  id: z.uuid(),
 });
 
-export async function deleteTask(app: FastifyInstance) {
+export async function getTask(app: FastifyInstance) {
   return app.withTypeProvider<ZodTypeProvider>().route({
-    method: 'DELETE',
+    method: 'GET',
     url: '/:id',
     schema: {
-      params: DeleteTaskParamsSchema,
+      params: GetTaskParamsSchema,
     },
     handler: async (request, reply) => {
       const { id } = request.params;
 
-      const deletedCount = await db('tasks').where({ id }).del();
+      const task = await db('tasks').select().where({ id }).first();
 
-      if (deletedCount === 0) {
-        return reply.status(StatusCodes.NOT_FOUND).send();
-      }
-
-      return reply.status(StatusCodes.NO_CONTENT).send();
+      reply.status(StatusCodes.OK).send({ data: task });
     },
   });
 }
