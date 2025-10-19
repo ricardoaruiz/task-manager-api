@@ -1,5 +1,5 @@
-import z from "zod";
-import "dotenv";
+import z from 'zod';
+import 'dotenv';
 
 const DEFAULT_MIN_PORT = 3000;
 const DEFAULT_MAX_PORT = 8000;
