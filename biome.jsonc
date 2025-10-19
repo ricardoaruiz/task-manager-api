@@ -1,6 +1,13 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite"],
+  "files": {
+    "includes": [
+      "src/**/*.{js,ts}",
+      "tests/**/*.{js,ts}",
+      "!commitlint.config.cjs"
+    ]
+  },
   "linter": {
     "rules": {
       "performance": {
