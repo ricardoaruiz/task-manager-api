@@ -11,7 +11,18 @@
     "test": "vitest",
     "lint": "ultracite check",
     "lint:fix": "ultracite fix",
-    "lint:doctor": "ultracite doctor"
+    "lint:doctor": "ultracite doctor",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "src/**/*.+(js|jsx|ts|tsx|md|mdx|yml|yaml)": [
+      "npm run lint:fix"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "git-cz"
+    }
   },
   "keywords": [],
   "author": "",
@@ -24,8 +35,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@types/node": "^24.8.1",
     "@types/supertest": "^6.0.3",
+    "commitizen": "^4.3.1",
+    "git-cz": "^4.9.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^16.2.4",
     "supertest": "^7.1.4",
     "tsup": "^8.5.0",
     "tsx": "^4.20.6",
