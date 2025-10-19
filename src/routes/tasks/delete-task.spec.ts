@@ -14,7 +14,7 @@ describe('Delete Task', () => {
       })
       .expect(StatusCodes.CREATED);
 
-    const createdTask = createResponse.body.data[0];
+    const createdTask = createResponse.body.data;
 
     // Verify the task exists
     await request(app.server)

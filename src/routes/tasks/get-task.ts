@@ -3,13 +3,13 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { StatusCodes } from 'http-status-codes';
 import z from 'zod/v4';
-import { db } from '../../database/db.js';
+import type { ITaksService } from '../../services/task-service.js';
 
 const GetTaskParamsSchema = z.object({
   id: z.uuid(),
 });
 
-export async function getTask(app: FastifyInstance) {
+export async function getTask(app: FastifyInstance, service: ITaksService) {
   return app.withTypeProvider<ZodTypeProvider>().route({
     method: 'GET',
     url: '/:id',
@@ -19,7 +19,7 @@ export async function getTask(app: FastifyInstance) {
     handler: async (request, reply) => {
       const { id } = request.params;
 
-      const task = await db('tasks').select().where({ id }).first();
+      const task = await service.getTaskById(id);
 
       if (!task) {
         return reply.status(StatusCodes.NOT_FOUND).send();

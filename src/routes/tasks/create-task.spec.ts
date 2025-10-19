@@ -34,12 +34,38 @@ describe('Create Task', () => {
       .expect(StatusCodes.CREATED)
       .expect((res) => {
         const { data } = res.body;
-        expect(data[0]).toEqual(
+        expect(data).toEqual(
           expect.objectContaining({
             id: expect.any(String),
             title: 'Task Title',
             description: 'Task description',
           })
+        );
+      });
+  });
+
+  it('should not create a task with a duplicate title', async () => {
+    const taskData = {
+      title: 'Unique Task Title',
+      description: 'Task description',
+    };
+
+    // First creation should succeed
+    await request(app.server)
+      .post('/tasks/')
+      .send(taskData)
+      .expect(StatusCodes.CREATED);
+
+    // Second creation with the same title should fail
+    await request(app.server)
+      .post('/tasks/')
+      .send(taskData)
+      .expect(StatusCodes.UNPROCESSABLE_ENTITY)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('error', 'Service Error');
+        expect(res.body).toHaveProperty(
+          'message',
+          'A task with the same title already exists'
         );
       });
   });

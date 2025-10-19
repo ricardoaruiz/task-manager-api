@@ -20,7 +20,7 @@ describe('Get Task', () => {
       })
       .expect(StatusCodes.CREATED);
 
-    const createdTask = createResponse.body.data[0];
+    const createdTask = createResponse.body.data;
 
     // Now, retrieve the created task
     await request(app.server)

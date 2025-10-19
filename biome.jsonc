@@ -10,8 +10,14 @@
   },
   "linter": {
     "rules": {
+      "style": {
+        "useFilenamingConvention": "off"
+      },
       "performance": {
         "noBarrelFile": "off"
+      },
+      "nursery": {
+        "useConsistentTypeDefinitions": "off"
       }
     }
   },

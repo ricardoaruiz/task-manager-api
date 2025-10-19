@@ -14,7 +14,7 @@ describe('Update Task', () => {
       })
       .expect(StatusCodes.CREATED);
 
-    const createdTask = createResponse.body.data[0];
+    const createdTask = createResponse.body.data;
 
     // Now, update the created task
     const updatedData = {
@@ -27,7 +27,7 @@ describe('Update Task', () => {
       .send(updatedData)
       .expect(StatusCodes.OK);
 
-    const updatedTask = updateResponse.body.data[0];
+    const updatedTask = updateResponse.body.data;
 
     // Verify the task has been updated
     expect(updatedTask.title).toBe(updatedData.title);

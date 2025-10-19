@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { StatusCodes } from 'http-status-codes';
 import z from 'zod/v4';
-import { db } from '../../database/db.js';
+import type { ITaksService } from '../../services/task-service.js';
 
 const UpdateTaskParamsSchema = z.object({
   id: z.uuid('Invalid task ID'),
@@ -14,7 +14,7 @@ const UpdateTaskBodySchema = z.object({
   description: z.string().min(1, 'Description is required'),
 });
 
-export async function updateTask(app: FastifyInstance) {
+export async function updateTask(app: FastifyInstance, service: ITaksService) {
   return app.withTypeProvider<ZodTypeProvider>().route({
     method: 'PUT',
     url: '/:id',
@@ -25,15 +25,12 @@ export async function updateTask(app: FastifyInstance) {
     handler: async (request, reply) => {
       const { id } = request.params;
       const { title, description } = request.body;
+      const updatedTask = await service.updateTask(id, { title, description });
 
-      const updatedTask = await db('tasks')
-        .update({ title, description })
-        .where({ id })
-        .returning('*');
-
-      if (updatedTask.length === 0) {
+      if (!updatedTask) {
         return reply.status(StatusCodes.NOT_FOUND).send();
       }
+
       return reply.status(StatusCodes.OK).send({ data: updatedTask });
     },
   });

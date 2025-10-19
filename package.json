@@ -15,6 +15,7 @@
     "knex": "node --import tsx ./node_modules/knex/bin/cli.js",
     "migrate:make": "npm run knex -- migrate:make",
     "migrate:latest": "npm run knex -- migrate:latest",
+    "migrate:rollback": "npm run knex -- migrate:rollback",
     "prepare": "husky install"
   },
   "lint-staged": {

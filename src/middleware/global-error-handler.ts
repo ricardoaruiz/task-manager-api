@@ -5,6 +5,7 @@ import {
   isResponseSerializationError,
 } from 'fastify-type-provider-zod';
 import { StatusCodes } from 'http-status-codes';
+import { ServiceException } from '../exceptions/ServiceException.js';
 
 export async function globalErrorHandler(
   error: Error,
@@ -28,6 +29,13 @@ export async function globalErrorHandler(
         field: issue.input,
         message: issue.message,
       })),
+    });
+  }
+
+  if (error instanceof ServiceException) {
+    return reply.code(StatusCodes.UNPROCESSABLE_ENTITY).send({
+      error: 'Service Error',
+      message: error.message,
     });
   }
 

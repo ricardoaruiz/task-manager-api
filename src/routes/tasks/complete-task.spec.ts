@@ -12,7 +12,7 @@ describe('Complete Task', () => {
     });
 
     expect(createResponse.status).toBe(StatusCodes.CREATED);
-    const taskId = createResponse.body.data[0].id;
+    const taskId = createResponse.body.data.id;
 
     // Now, complete the created task
     const completeResponse = await request(app.server)
@@ -22,7 +22,7 @@ describe('Complete Task', () => {
       });
 
     expect(completeResponse.status).toBe(StatusCodes.OK);
-    expect(completeResponse.body.data[0].completed).toBe(1);
+    expect(completeResponse.body.data.completed).toBe(1);
   });
 
   it('should return 404 for non-existing task', async () => {
