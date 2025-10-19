@@ -6,12 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsup src/server.ts --format esm --out-dir dist --clean",
+    "build": "tsup src/server.ts --format esm --clean",
     "start": "node dist/server.js",
     "test": "vitest",
     "lint": "ultracite check",
     "lint:fix": "ultracite fix",
     "lint:doctor": "ultracite doctor",
+    "knex": "node --import tsx ./node_modules/knex/bin/cli.js",
+    "migrate:make": "npm run knex -- migrate:make",
+    "migrate:latest": "npm run knex -- migrate:latest",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -31,6 +34,8 @@
     "dotenv": "^17.2.3",
     "fastify": "^5.6.1",
     "http-status-codes": "^2.3.0",
+    "knex": "^3.1.0",
+    "sqlite3": "^5.1.7",
     "zod": "^4.1.12"
   },
   "devDependencies": {

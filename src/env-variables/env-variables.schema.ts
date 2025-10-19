@@ -9,4 +9,6 @@ export const envVariablesSchema = z.object({
     .number()
     .min(DEFAULT_MIN_PORT, `Port must be at least ${DEFAULT_MIN_PORT}`)
     .max(DEFAULT_MAX_PORT, `Port must be at most ${DEFAULT_MAX_PORT}`),
+  DATABASE_CLIENT: z.enum(['sqlite3', 'pg']),
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
 });
