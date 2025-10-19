@@ -21,6 +21,10 @@ export async function getTask(app: FastifyInstance) {
 
       const task = await db('tasks').select().where({ id }).first();
 
+      if (!task) {
+        return reply.status(StatusCodes.NOT_FOUND).send();
+      }
+
       reply.status(StatusCodes.OK).send({ data: task });
     },
   });

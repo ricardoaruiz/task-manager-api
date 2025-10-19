@@ -30,6 +30,10 @@ export async function completeTask(app: FastifyInstance) {
         .where({ id })
         .returning('*');
 
+      if (updatedTask.length === 0) {
+        return reply.status(StatusCodes.NOT_FOUND).send();
+      }
+
       return reply.status(StatusCodes.OK).send({ data: updatedTask });
     },
   });

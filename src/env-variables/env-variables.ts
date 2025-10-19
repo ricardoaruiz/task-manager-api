@@ -1,7 +1,13 @@
 /** biome-ignore-all lint/suspicious/noConsole: is allowed here */
-import 'dotenv/config';
+import { config } from 'dotenv';
 import z from 'zod/v4';
 import { envVariablesSchema } from './env-variables.schema.js';
+
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+
+config({
+  path: envFile,
+});
 
 const environmentVariables = envVariablesSchema.safeParse(process.env);
 

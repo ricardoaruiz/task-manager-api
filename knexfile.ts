@@ -10,6 +10,7 @@ const connection = isSQLite
 const knexConfig: Knex.Config = {
   client: envVariables.DATABASE_CLIENT,
   connection,
+  useNullAsDefault: true,
   migrations: {
     extension: 'ts',
     directory: './src/database/migrations',
