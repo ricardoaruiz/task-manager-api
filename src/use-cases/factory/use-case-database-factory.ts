@@ -1,5 +1,8 @@
 import { DrizzleTaskRepository } from '@/repositories/drizzle/drizzle-task.repository'
+import { DrizzleUserRepository } from '@/repositories/drizzle/drizzle-user.repository'
 import type { TasksRepository } from '@/repositories/interfaces/task.repository'
+import type { UserRepository } from '@/repositories/interfaces/user.repository'
+import { LoginUseCase } from '../auth/login.use-case'
 import {
   CompleteTaskUseCase,
   CreateTaskUseCase,
@@ -12,16 +15,23 @@ import type { UseCaseFactory } from './use-case-interface-factory'
 
 export class DatabaseUseCaseFactory implements UseCaseFactory {
   private static instance: DatabaseUseCaseFactory
+
   private readonly tasksRespoitory: TasksRepository
+  private readonly userRepository: UserRepository
 
   private constructor() {
     this.tasksRespoitory = new DrizzleTaskRepository()
+    this.userRepository = new DrizzleUserRepository()
   }
   static getInstance(): DatabaseUseCaseFactory {
     if (!DatabaseUseCaseFactory.instance) {
       DatabaseUseCaseFactory.instance = new DatabaseUseCaseFactory()
     }
     return DatabaseUseCaseFactory.instance
+  }
+
+  makeLoginUseCase(): LoginUseCase {
+    return new LoginUseCase(this.userRepository)
   }
 
   makeListTasksUseCase(): ListTasksUseCase {

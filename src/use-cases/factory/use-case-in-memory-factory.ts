@@ -1,5 +1,8 @@
 import { InMemoryTasksRepository } from '@/repositories/in-memory/in-memory-task.repository'
+import { InMemoryUserRepository } from '@/repositories/in-memory/in-memory-user.repository'
 import type { TasksRepository } from '@/repositories/interfaces/task.repository'
+import type { UserRepository } from '@/repositories/interfaces/user.repository'
+import { LoginUseCase } from '../auth/login.use-case'
 import {
   CompleteTaskUseCase,
   CreateTaskUseCase,
@@ -13,9 +16,11 @@ import type { UseCaseFactory } from './use-case-interface-factory'
 export class InMemoryUseCaseFactory implements UseCaseFactory {
   private static instance: InMemoryUseCaseFactory
   private readonly tasksRespoitory: TasksRepository
+  private readonly userRepository: UserRepository
 
   private constructor() {
     this.tasksRespoitory = new InMemoryTasksRepository()
+    this.userRepository = new InMemoryUserRepository()
   }
 
   static getInstance(): InMemoryUseCaseFactory {
@@ -23,6 +28,10 @@ export class InMemoryUseCaseFactory implements UseCaseFactory {
       InMemoryUseCaseFactory.instance = new InMemoryUseCaseFactory()
     }
     return InMemoryUseCaseFactory.instance
+  }
+
+  makeLoginUseCase(): LoginUseCase {
+    return new LoginUseCase(this.userRepository)
   }
 
   makeListTasksUseCase(): ListTasksUseCase {
