@@ -1,0 +1,23 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit",
+    "source.removeUnusedImports": "explicit"
+  },
+  "material-icon-theme.files.associations": {
+    "server.ts": "Rocket",
+    "app.ts": "Stackblitz",
+    "env.ts": "Tune",
+    "*.use-case.ts": "Todo",
+    "*.repository.ts": "Database"
+  },
+  "material-icon-theme.folders.associations": {
+    "repositories/in-memory": "Liquibase",
+    "repositories/drizzle": "Drizzle",
+    "routes/health": "Television",
+    "@types/domain": "Docs",
+    "use-cases": "Rules"
+  }
+}

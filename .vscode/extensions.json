@@ -1,0 +1,44 @@
+{
+  "recommendations": [
+    // Biome - Linter e Formatter principal do projeto
+    "biomejs.biome",
+
+    // TypeScript e JavaScript essenciais
+    "ms-vscode.vscode-typescript-next",
+
+    // Node.js desenvolvimento
+    "ms-vscode.vscode-node-azure-pack",
+
+    // Git e controle de versão
+    "eamodio.gitlens",
+
+    // Utilitários essenciais para desenvolvimento
+    "bradlc.vscode-tailwindcss",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag",
+    "ms-vscode.vscode-json",
+
+    // REST API desenvolvimento (para testar APIs)
+    "humao.rest-client",
+
+    // Produtividade
+    "usernamehw.errorlens",
+    "aaron-bond.better-comments",
+    "streetsidesoftware.code-spell-checker",
+    "gruntfuggly.todo-tree",
+
+    // Temas e UI (opcionais)
+    "pkief.material-icon-theme",
+    "github.github-vscode-theme"
+  ],
+  "unwantedRecommendations": [
+    // Evitar conflitos com o Biome
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-eslint",
+
+    // Formatters que podem conflitar
+    "hookyqr.beautify",
+    "editorconfig.editorconfig"
+  ]
+}

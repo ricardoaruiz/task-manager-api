@@ -1,0 +1,81 @@
+## Passos para setup inicial do projeto
+
+- criar a pasta "task-manager-api"
+  ```shell
+    mkdir task-manager-api
+  ```
+
+- rodar o comando
+  ```shell
+    npm init -y
+  ```
+
+- criar o arquivo .npmrc com o conteúdo
+  ```
+    save-exact=true
+  ```
+- rodar o comando:
+  ```shell
+    npm i -D typescript tsx tsup @types/node
+  ```
+- rodar o comando:
+  ```shell
+    npx tsc --init
+  ```
+
+- Acessar essa url: "https://github.com/tsconfig/bases" e pegar o conteúdo do arquivo tsconfig da versão do node em uso
+
+- configurar o path alias no tsconfig:
+  ```json
+  "compilerOptions": {
+  ...
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      },
+  ...
+  }
+  ```
+
+- criar um arquivo ".env" na raiz do projeto (fora da pasta src)
+
+- criar os scripts de dev, build e start no package.json
+  ```json
+    "scripts": {
+      "dev": "tsx watch --env-file .env src/server.ts",
+      "build": "tsup src --format cjs --clean",
+      "start": "node --env-file .env dist/server.js"
+    },
+  ```
+  
+- instalar o biome
+  ```shell
+    npm i -D @biomejs/biome
+  ```
+
+- inicializar o biome
+  ```shell
+    npx @biomejs/biome init
+  ```
+
+- criar o arquivo ".vscode/settings.json" com o seguinte conteúdo
+  ```json
+    {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "biomejs.biome",
+      "editor.codeActionsOnSave": {
+        "source.fixAll.biome": "explicit",
+        "source.organizeImports.biome": "explicit",
+        "source.removeUnusedImports": "explicit"
+      }
+    }
+  ```
+
+- instalar:
+  ```shell
+    npm i -D vite, vite-tsconfig-paths, @vitest/coverage-v8, supertest
+  ```
+  - https://vitest.dev/guide/
+  - https://vitest.dev/config/setupfiles.html#setupfiles
+  - https://vitest.dev/guide/coverage.html
+  - https://www.npmjs.com/package/vite-tsconfig-paths
