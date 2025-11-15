@@ -15,7 +15,7 @@ export const CreateTaskResponseSuccessSchema = z4.object({
     .string()
     .min(1, 'Description is required')
     .describe('Description of the task'),
-  completedAt: z4.coerce
+  completed_at: z4.coerce
     .date()
     .nullable()
     .describe('The completion date of the task, or null if not completed'),

@@ -6,6 +6,7 @@ import { DeleteTaskUseCase } from './delete-task.use-case'
 describe('DeleteTaskUseCase', () => {
   let tasksRepository: InMemoryTasksRepository
   let sut: DeleteTaskUseCase
+  const user_id = 'user-1'
 
   beforeEach(() => {
     tasksRepository = new InMemoryTasksRepository()
@@ -16,16 +17,17 @@ describe('DeleteTaskUseCase', () => {
     const task = await tasksRepository.create({
       title: 'Test Task',
       description: 'This is a test task',
+      user_id,
     })
 
-    const deletedTask = await sut.execute(task.id)
+    const deletedTask = await sut.execute(task.id, user_id)
 
     expect(deletedTask.title).toEqual(task.title)
   })
 
   it('should not be able to delete an unexisting task', async () => {
-    await expect(() => sut.execute('non-existing-id')).rejects.toThrowError(
-      TaskNotFoundError,
-    )
+    await expect(() =>
+      sut.execute('non-existing-id', user_id),
+    ).rejects.toThrowError(TaskNotFoundError)
   })
 })

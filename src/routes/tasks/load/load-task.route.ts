@@ -34,7 +34,10 @@ export const loadTaskRoute: FastifyPluginAsyncZod<LoadTaskOptions> = async (
     async (request, reply) => {
       const { id } = request.params
 
-      const loadedTask = await useCases.loadTask.execute(id)
+      const loadedTask = await useCases.loadTask.execute(
+        id,
+        request.userId ?? '',
+      )
 
       if (!loadedTask) {
         return reply.status(StatusCodes.NOT_FOUND).send()

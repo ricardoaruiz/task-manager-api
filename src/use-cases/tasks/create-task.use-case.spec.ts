@@ -7,6 +7,7 @@ import { CreateTaskUseCase } from './create-task.use-case'
 describe('CreateTaskUseCase', () => {
   let tasksRepository: TasksRepository
   let sut: CreateTaskUseCase
+  const user_id = 'user-1'
 
   beforeEach(() => {
     tasksRepository = new InMemoryTasksRepository()
@@ -18,6 +19,7 @@ describe('CreateTaskUseCase', () => {
       data: {
         title: 'New Task',
         description: 'Task description',
+        user_id,
       },
     })
 
@@ -35,6 +37,7 @@ describe('CreateTaskUseCase', () => {
       data: {
         title: 'New Task',
         description: 'Task description',
+        user_id,
       },
     })
 
@@ -43,6 +46,7 @@ describe('CreateTaskUseCase', () => {
         id: expect.any(String),
         title: 'New Task',
         description: 'Task description',
+        user_id,
       }),
     )
 
@@ -51,6 +55,7 @@ describe('CreateTaskUseCase', () => {
         data: {
           title: 'New Task',
           description: 'Task description',
+          user_id,
         },
       }),
     ).rejects.toThrowError(TaskAlreadyExistsError)

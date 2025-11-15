@@ -6,6 +6,7 @@ import { CompleteTaskUseCase } from './complete-task.use-case'
 describe('CompleteTaskUseCase', () => {
   let tasksRepository: InMemoryTasksRepository
   let sut: CompleteTaskUseCase
+  const user_id = 'user-1'
 
   beforeEach(() => {
     vi.useFakeTimers()
@@ -21,23 +22,24 @@ describe('CompleteTaskUseCase', () => {
     const task = await tasksRepository.create({
       title: 'New Task',
       description: 'Task Description',
+      user_id,
     })
 
     const dueDate = new Date(2025, 5, 22, 8, 0, 0)
     vi.setSystemTime(dueDate)
 
-    const uncompletedTask = await tasksRepository.findById(task.id)
-    expect(uncompletedTask?.completedAt).toBeNull()
+    const uncompletedTask = await tasksRepository.findById(task.id, user_id)
+    expect(uncompletedTask?.completed_at).toBeNull()
 
-    await sut.execute(task.id)
+    await sut.execute(task.id, user_id)
 
-    const completedTask = await tasksRepository.findById(task.id)
-    expect(completedTask?.completedAt).toEqual(dueDate)
+    const completedTask = await tasksRepository.findById(task.id, user_id)
+    expect(completedTask?.completed_at).toEqual(dueDate)
   })
 
   it('should not be able to complete a non existing task', async () => {
     await expect(() =>
-      sut.execute('non-existing-task-id'),
+      sut.execute('non-existing-task-id', user_id),
     ).rejects.toBeInstanceOf(TaskNotFoundError)
   })
 })

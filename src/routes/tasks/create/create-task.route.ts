@@ -32,7 +32,7 @@ export const createTaskRoute: FastifyPluginAsyncZod<RouteOptions> = async (
       const { title, description } = request.body
 
       const createdTask = await useCases.createTask.execute({
-        data: { title, description },
+        data: { title, description, user_id: request.userId ?? '' },
       })
 
       return reply.status(StatusCodes.CREATED).send(createdTask)

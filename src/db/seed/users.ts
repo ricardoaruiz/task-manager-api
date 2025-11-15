@@ -13,7 +13,7 @@ export async function seedUsersTable() {
       password: hashService.generate({ plainText: '123456' }),
     })
   } catch (_error) {
-    console.error('Erro ao inserir o usuário Rick Ruiz:')
+    console.error('Erro ao inserir o usuário Rick Ruiz')
   }
 
   try {
@@ -23,7 +23,7 @@ export async function seedUsersTable() {
       password: hashService.generate({ plainText: '123456' }),
     })
   } catch (_error) {
-    console.error('Erro ao inserir o usuário Gui Ruiz:')
+    console.error('Erro ao inserir o usuário Gui Ruiz')
   }
 
   console.log('Finalizando a geração dos usuários de exemplo...')

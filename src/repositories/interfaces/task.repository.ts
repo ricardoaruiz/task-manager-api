@@ -22,14 +22,14 @@ export type TasksRepository = {
    * @param taskId - The ID of the task to find.
    * @return A promise that resolves to the task if found, or null if not found.
    */
-  findById(taskId: string): Promise<Task | null>
+  findById(taskId: string, userId: string): Promise<Task | null>
 
   /**
    * Finds a task by its Title
    * @param title - The title of the task to find.
    * @return A promise that resolves to the task if found, or null if not found.
    */
-  findByTitle(title: string): Promise<Task | null>
+  findByTitle(title: string, userId: string): Promise<Task | null>
 
   /**
    * Creates a new task.
@@ -50,5 +50,5 @@ export type TasksRepository = {
    * @param taskId - The ID of the task to delete.
    * @return A promise that resolves to the deleted task if found, or null if not found.
    */
-  delete(taskId: string): Promise<Task | null>
+  delete(taskId: string, userId: string): Promise<Task | null>
 }

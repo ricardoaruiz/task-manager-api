@@ -9,7 +9,10 @@ export class UpdateTaskUseCase {
     taskId: string,
     taskToBeUpdated: UpdateTaskInput,
   ): Promise<void> {
-    const task = await this.tasksRepository.findById(taskId)
+    const task = await this.tasksRepository.findById(
+      taskId,
+      taskToBeUpdated.user_id,
+    )
 
     if (!task) {
       throw new TaskNotFoundError()

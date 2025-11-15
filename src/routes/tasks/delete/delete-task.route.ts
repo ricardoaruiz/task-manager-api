@@ -32,7 +32,10 @@ export const deleteTaskRoute: FastifyPluginAsyncZod<DeleteTaskOptions> = async (
     async (request, reply) => {
       const { id } = request.params
 
-      const deletedTask = await useCases.deleteTask.execute(id)
+      const deletedTask = await useCases.deleteTask.execute(
+        id,
+        request.userId ?? '',
+      )
 
       return reply.status(StatusCodes.OK).send(deletedTask)
     },

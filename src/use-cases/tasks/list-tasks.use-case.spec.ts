@@ -5,6 +5,7 @@ import { ListTasksUseCase } from './list-tasks.use-case'
 describe('ListTasksUseCase', () => {
   let tasksRepository: InMemoryTasksRepository
   let sut: ListTasksUseCase
+  const user_id = 'user-1'
 
   beforeEach(() => {
     tasksRepository = new InMemoryTasksRepository()
@@ -12,7 +13,7 @@ describe('ListTasksUseCase', () => {
   })
 
   it('should be able to get a empty tasks list', async () => {
-    const tasks = await sut.execute()
+    const tasks = await sut.execute({ user_id })
     expect(tasks).toHaveLength(0)
   })
 
@@ -21,10 +22,11 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
         description: `Description ${i}`,
+        user_id,
       })
     }
 
-    const tasks = await sut.execute()
+    const tasks = await sut.execute({ user_id })
     expect(tasks).toHaveLength(2)
   })
 
@@ -33,10 +35,11 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
         description: `Description ${i}`,
+        user_id,
       })
     }
 
-    const tasks = await sut.execute({ filter: { title: 'Task Odd' } })
+    const tasks = await sut.execute({ user_id, filter: { title: 'Task Odd' } })
     expect(tasks).toHaveLength(2)
   })
 
@@ -45,10 +48,12 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
         description: `Description ${i}`,
+        user_id,
       })
     }
 
     const tasks = await sut.execute({
+      user_id,
       filter: { title: 'Task Odd' },
       page: 1,
       itemsPerPage: 5,
@@ -63,10 +68,12 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
         description: `Description ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
+        user_id,
       })
     }
 
     const tasks = await sut.execute({
+      user_id,
       filter: { description: 'Description Odd' },
     })
     expect(tasks).toHaveLength(2)
@@ -77,10 +84,12 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
         description: `Description ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
+        user_id,
       })
     }
 
     const tasks = await sut.execute({
+      user_id,
       filter: { description: 'Description Odd' },
       page: 1,
       itemsPerPage: 5,
@@ -95,10 +104,12 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
         description: `Description ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
+        user_id,
       })
     }
 
     const tasks = await sut.execute({
+      user_id,
       filter: { title: 'Task Odd', description: 'Description Odd' },
     })
     expect(tasks).toHaveLength(2)
@@ -109,15 +120,16 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i}`,
         description: `Description ${i}`,
+        user_id,
       })
     }
 
-    const firstPageTasks = await sut.execute({ page: 1 })
+    const firstPageTasks = await sut.execute({ user_id, page: 1 })
     expect(firstPageTasks).toHaveLength(10)
     expect(firstPageTasks[0].title).toBe('Task 1')
     expect(firstPageTasks[9].title).toBe('Task 10')
 
-    const thirdPageTasks = await sut.execute({ page: 3 })
+    const thirdPageTasks = await sut.execute({ user_id, page: 3 })
     expect(thirdPageTasks).toHaveLength(5)
     expect(thirdPageTasks[0].title).toBe('Task 21')
     expect(thirdPageTasks[4].title).toBe('Task 25')
@@ -128,15 +140,24 @@ describe('ListTasksUseCase', () => {
       await tasksRepository.create({
         title: `Task ${i}`,
         description: `Description ${i}`,
+        user_id,
       })
     }
 
-    const firstPageTasks = await sut.execute({ page: 1, itemsPerPage: 5 })
+    const firstPageTasks = await sut.execute({
+      user_id,
+      page: 1,
+      itemsPerPage: 5,
+    })
     expect(firstPageTasks).toHaveLength(5)
     expect(firstPageTasks[0].title).toBe('Task 1')
     expect(firstPageTasks[4].title).toBe('Task 5')
 
-    const thirdPageTasks = await sut.execute({ page: 3, itemsPerPage: 5 })
+    const thirdPageTasks = await sut.execute({
+      user_id,
+      page: 3,
+      itemsPerPage: 5,
+    })
     expect(thirdPageTasks).toHaveLength(5)
     expect(thirdPageTasks[0].title).toBe('Task 11')
     expect(thirdPageTasks[4].title).toBe('Task 15')

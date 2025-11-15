@@ -5,9 +5,9 @@ import db from '@/lib/drizzle'
 import type { TasksRepository } from '../interfaces/task.repository'
 
 export class DrizzleTaskRepository implements TasksRepository {
-  async list(_params: ListTasksInput): Promise<Task[]> {
-    const limit = _params.itemsPerPage ?? -1
-    const tempOffset = _params.page ? (_params.page - 1) * limit : 0
+  async list(params: ListTasksInput): Promise<Task[]> {
+    const limit = params.itemsPerPage ?? -1
+    const tempOffset = params.page ? (params.page - 1) * limit : 0
     const offset = limit > 0 ? tempOffset : 0
 
     const tasks = await db
@@ -15,12 +15,13 @@ export class DrizzleTaskRepository implements TasksRepository {
       .from(tasksTable)
       .where(
         and(
-          _params.filter?.title
-            ? ilike(tasksTable.title, `%${_params.filter.title}%`)
+          eq(tasksTable.user_id, params.user_id),
+          params.filter?.title
+            ? ilike(tasksTable.title, `%${params.filter.title}%`)
             : undefined,
 
-          _params.filter?.description
-            ? ilike(tasksTable.description, `%${_params.filter.description}%`)
+          params.filter?.description
+            ? ilike(tasksTable.description, `%${params.filter.description}%`)
             : undefined,
         ),
       )
@@ -31,54 +32,65 @@ export class DrizzleTaskRepository implements TasksRepository {
     return tasks
   }
 
-  async findById(taskId: string): Promise<Task | null> {
+  async findById(taskId: string, userId: string): Promise<Task | null> {
     const result = await db
       .select()
       .from(tasksTable)
-      .where(eq(tasksTable.id, taskId))
+      .where(and(eq(tasksTable.id, taskId), eq(tasksTable.user_id, userId)))
 
     return result[0]
   }
 
-  async findByTitle(title: string): Promise<Task | null> {
+  async findByTitle(title: string, userId: string): Promise<Task | null> {
     const result = await db
       .select()
       .from(tasksTable)
-      .where(eq(tasksTable.title, title))
+      .where(and(eq(tasksTable.title, title), eq(tasksTable.user_id, userId)))
 
     return result[0]
   }
 
-  async create(data: CreateTaskInput): Promise<Task> {
+  async create({
+    title,
+    description,
+    user_id,
+  }: CreateTaskInput): Promise<Task> {
     const result = await db
       .insert(tasksTable)
       .values({
-        title: data.title,
-        description: data.description,
+        user_id,
+        title,
+        description,
       })
       .returning()
 
     return result[0]
   }
 
-  async update(task: Task): Promise<Task | null> {
+  async update({
+    title,
+    description,
+    completed_at,
+    id,
+    user_id,
+  }: Task): Promise<Task | null> {
     const result = await db
       .update(tasksTable)
       .set({
-        title: task.title,
-        description: task.description,
-        completedAt: task.completedAt,
+        title,
+        description,
+        completed_at,
       })
-      .where(eq(tasksTable.id, task.id))
+      .where(and(eq(tasksTable.id, id), eq(tasksTable.user_id, user_id)))
       .returning()
 
     return result[0]
   }
 
-  async delete(taskId: string): Promise<Task | null> {
+  async delete(taskId: string, userId: string): Promise<Task | null> {
     const result = await db
       .delete(tasksTable)
-      .where(eq(tasksTable.id, taskId))
+      .where(and(eq(tasksTable.id, taskId), eq(tasksTable.user_id, userId)))
       .returning()
 
     return result[0]

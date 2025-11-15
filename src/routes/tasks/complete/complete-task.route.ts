@@ -31,7 +31,7 @@ export const completeTaskRoute: FastifyPluginAsyncZod<
     },
     async (request, reply) => {
       const { id } = request.params
-      await useCases.completeTask.execute(id)
+      await useCases.completeTask.execute(id, request.userId ?? '')
       return reply.status(StatusCodes.NO_CONTENT).send()
     },
   )

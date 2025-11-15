@@ -35,7 +35,11 @@ export const updateTaskRoute: FastifyPluginAsyncZod<UpdateTaskOptions> = async (
     async (request, reply) => {
       const { id } = request.params
       const { title, description } = request.body
-      await useCases.updateTask.execute(id, { title, description })
+      await useCases.updateTask.execute(id, {
+        title,
+        description,
+        user_id: request.userId ?? '',
+      })
       return reply.status(StatusCodes.NO_CONTENT).send()
     },
   )

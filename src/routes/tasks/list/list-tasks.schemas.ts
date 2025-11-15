@@ -16,7 +16,7 @@ export const ListTaskRouteResponseSuccessSchema = z4.object({
       id: z4.string().describe('The unique identifier of the task'),
       title: z4.string().describe('The title of the task'),
       description: z4.string().describe('The description of the task'),
-      completedAt: z4.coerce
+      completed_at: z4.coerce
         .date()
         .nullable()
         .describe('The completion date of the task, or null if not completed'),

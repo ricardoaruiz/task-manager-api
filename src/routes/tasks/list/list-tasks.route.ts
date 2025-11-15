@@ -29,14 +29,15 @@ export const listTasksRoute: FastifyPluginAsyncZod<RouteOptions> = async (
         },
       },
     },
-    async (_request, reply) => {
-      const { title, description, page, itemsPerPage } = _request.query
+    async (request, reply) => {
+      const { title, description, page, itemsPerPage } = request.query
 
       const tasks = await useCases.listTasks.execute({
+        user_id: request.userId ?? '',
         ...(!!title || !!description
           ? {
               filter: {
-                ..._request.query,
+                ...request.query,
               },
             }
           : {}),

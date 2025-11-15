@@ -14,7 +14,7 @@ export const DeleteTaskRsponseSuccessSchema = z4.object({
     .string()
     .min(1, 'Description is required')
     .describe('The description of the deleted task'),
-  completedAt: z4.coerce
+  completed_at: z4.coerce
     .date()
     .nullable()
     .describe(

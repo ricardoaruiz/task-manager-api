@@ -6,6 +6,7 @@ import { UpdateTaskUseCase } from './update-task.use-case'
 describe('UpdateTaskUseCase', () => {
   let tasksRepository: InMemoryTasksRepository
   let sut: UpdateTaskUseCase
+  const user_id = 'user-1'
 
   beforeEach(() => {
     tasksRepository = new InMemoryTasksRepository()
@@ -16,17 +17,19 @@ describe('UpdateTaskUseCase', () => {
     const task = await tasksRepository.create({
       title: 'New Task',
       description: 'Task Description',
+      user_id,
     })
 
-    const originalTask = await tasksRepository.findById(task.id)
+    const originalTask = await tasksRepository.findById(task.id, user_id)
     expect(originalTask?.title).toEqual('New Task')
     expect(originalTask?.description).toEqual('Task Description')
 
     await sut.execute(task.id, {
       title: 'New Task updated',
+      user_id,
     })
 
-    const updatedTask = await tasksRepository.findById(task.id)
+    const updatedTask = await tasksRepository.findById(task.id, user_id)
     expect(updatedTask?.title).toEqual('New Task updated')
     expect(updatedTask?.description).toEqual('Task Description')
   })
@@ -35,17 +38,19 @@ describe('UpdateTaskUseCase', () => {
     const task = await tasksRepository.create({
       title: 'New Task',
       description: 'Task Description',
+      user_id,
     })
 
-    const originalTask = await tasksRepository.findById(task.id)
+    const originalTask = await tasksRepository.findById(task.id, user_id)
     expect(originalTask?.title).toEqual('New Task')
     expect(originalTask?.description).toEqual('Task Description')
 
     await sut.execute(task.id, {
       description: 'Task Description updated',
+      user_id,
     })
 
-    const updatedTask = await tasksRepository.findById(task.id)
+    const updatedTask = await tasksRepository.findById(task.id, user_id)
     expect(updatedTask?.title).toEqual('New Task')
     expect(updatedTask?.description).toEqual('Task Description updated')
   })
@@ -54,18 +59,20 @@ describe('UpdateTaskUseCase', () => {
     const task = await tasksRepository.create({
       title: 'New Task',
       description: 'Task Description',
+      user_id,
     })
 
-    const originalTask = await tasksRepository.findById(task.id)
+    const originalTask = await tasksRepository.findById(task.id, user_id)
     expect(originalTask?.title).toEqual('New Task')
     expect(originalTask?.description).toEqual('Task Description')
 
     await sut.execute(task.id, {
       title: 'New Task updated',
       description: 'Task Description updated',
+      user_id,
     })
 
-    const updatedTask = await tasksRepository.findById(task.id)
+    const updatedTask = await tasksRepository.findById(task.id, user_id)
     expect(updatedTask?.title).toEqual('New Task updated')
     expect(updatedTask?.description).toEqual('Task Description updated')
   })
@@ -74,6 +81,7 @@ describe('UpdateTaskUseCase', () => {
     await expect(() =>
       sut.execute('non-existing-task-id', {
         title: 'New Task updated',
+        user_id,
       }),
     ).rejects.toBeInstanceOf(TaskNotFoundError)
   })

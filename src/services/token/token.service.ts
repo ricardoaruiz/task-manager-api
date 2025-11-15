@@ -1,7 +1,13 @@
-import { SignJWT } from 'jose'
+import { jwtVerify, SignJWT } from 'jose'
 import env from '@/env'
 import type { TokenService } from '..'
 import type { GenerateTokenParams } from './token.types'
+
+type JwtPayload = {
+  sub: string
+  name: string
+  email: string
+}
 
 export class JoseTokenService implements TokenService {
   async generateToken({
@@ -19,5 +25,17 @@ export class JoseTokenService implements TokenService {
       .sign(new TextEncoder().encode(env.JWT_SECRET))
 
     return token
+  }
+
+  async verifyToken(token: string): Promise<JwtPayload | null> {
+    try {
+      const { payload } = await jwtVerify(
+        token,
+        new TextEncoder().encode(env.JWT_SECRET),
+      )
+      return payload as JwtPayload
+    } catch (_error) {
+      return null
+    }
   }
 }

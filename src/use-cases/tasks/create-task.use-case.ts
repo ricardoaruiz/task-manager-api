@@ -15,7 +15,10 @@ export class CreateTaskUseCase {
   constructor(private readonly tasksRepository: TasksRepository) {}
 
   async execute({ data }: CreateTaskUseCaseRequest): Promise<Task> {
-    const existingTask = await this.tasksRepository.findByTitle(data.title)
+    const existingTask = await this.tasksRepository.findByTitle(
+      data.title,
+      data.user_id,
+    )
 
     if (existingTask) {
       throw new TaskAlreadyExistsError('Task with this title already exists.')

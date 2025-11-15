@@ -4,8 +4,15 @@ import type { TasksRepository } from '../interfaces/task.repository'
 export class InMemoryTasksRepository implements TasksRepository {
   private items: Task[] = []
 
-  list({ filter, page, itemsPerPage = 10 }: ListTasksInput): Promise<Task[]> {
-    let filteredItems: Task[] = this.items
+  list({
+    user_id,
+    filter,
+    page,
+    itemsPerPage = 10,
+  }: ListTasksInput): Promise<Task[]> {
+    let filteredItems: Task[] = this.items.filter(
+      (item) => item.user_id === user_id,
+    )
 
     if (filter?.title) {
       filteredItems = this.items.filter((item) =>
@@ -37,26 +44,31 @@ export class InMemoryTasksRepository implements TasksRepository {
     return Promise.resolve(filteredItems)
   }
 
-  findById(taskId: string): Promise<Task | null> {
-    return Promise.resolve(
-      this.items.find((item) => item.id === taskId) || null,
-    )
-  }
-
-  findByTitle(title: string): Promise<Task | null> {
+  findById(taskId: string, userId: string): Promise<Task | null> {
     return Promise.resolve(
       this.items.find(
-        (item) => item.title.toLocaleLowerCase() === title.toLocaleLowerCase(),
+        (item) => item.id === taskId && item.user_id === userId,
       ) || null,
     )
   }
 
-  create(data: CreateTaskInput): Promise<Task> {
+  findByTitle(title: string, userId: string): Promise<Task | null> {
+    return Promise.resolve(
+      this.items.find(
+        (item) =>
+          item.title.toLocaleLowerCase() === title.toLocaleLowerCase() &&
+          item.user_id === userId,
+      ) || null,
+    )
+  }
+
+  create({ title, description, user_id }: CreateTaskInput): Promise<Task> {
     const task: Task = {
       id: crypto.randomUUID(),
-      title: data.title,
-      description: data.description,
-      completedAt: null,
+      title,
+      description,
+      completed_at: null,
+      user_id,
     }
 
     this.items.push(task)
@@ -65,7 +77,10 @@ export class InMemoryTasksRepository implements TasksRepository {
   }
 
   async update(taskToBeUpdated: Task): Promise<Task | null> {
-    const originalTask = await this.findById(taskToBeUpdated.id)
+    const originalTask = await this.findById(
+      taskToBeUpdated.id,
+      taskToBeUpdated.user_id,
+    )
 
     if (!originalTask) {
       return null
@@ -80,8 +95,8 @@ export class InMemoryTasksRepository implements TasksRepository {
     return updatedTask
   }
 
-  async delete(taskId: string): Promise<Task | null> {
-    const taskToBeDeleted = await this.findById(taskId)
+  async delete(taskId: string, userId: string): Promise<Task | null> {
+    const taskToBeDeleted = await this.findById(taskId, userId)
 
     if (!taskToBeDeleted) {
       return null
