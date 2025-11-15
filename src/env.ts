@@ -8,6 +8,7 @@ const ENVIRONMENT_VARIABLES_SCHEMA = z4.object({
   PORT: z4.coerce.number(),
   PERSISTENCE_TYPE: z4.enum(['in-memory', 'database']),
   DATABASE_URL: z4.string(),
+  JWT_SECRET: z4.string(),
 })
 
 const envVariables = ENVIRONMENT_VARIABLES_SCHEMA.parse(process.env)

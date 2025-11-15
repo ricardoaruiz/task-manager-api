@@ -5,4 +5,6 @@ export type LoginInput = {
   password: string
 }
 
-export type LoginOutput = Omit<User, 'password'>
+export type LoginOutput = Omit<User, 'password'> & {
+  token: string
+}

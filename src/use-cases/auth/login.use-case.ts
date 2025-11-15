@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs'
+import { SignJWT } from 'jose'
 import type { LoginInput, LoginOutput } from '@/@types/domain/auth'
+import env from '@/env'
 import type { UserRepository } from '@/repositories/interfaces/user.repository'
 import { InvalidCredentialsError } from '../errors/InvalidCredentialsError'
 
@@ -23,6 +25,7 @@ export class LoginUseCase {
       throw new InvalidCredentialsError()
     }
 
+    // TODO criar servico para gerenciamento de senhas
     const isPasswordValid = bcrypt.compareSync(
       credentials.password,
       user.password,
@@ -32,8 +35,21 @@ export class LoginUseCase {
       throw new InvalidCredentialsError()
     }
 
+    // TODO criar servico para gerenciamento de tokens
+    const token = await new SignJWT({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+    })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime('2h')
+      .sign(new TextEncoder().encode(env.JWT_SECRET))
+
     const { password: _, ...userWithoutPassword } = user
 
-    return userWithoutPassword
+    return {
+      ...userWithoutPassword,
+      token,
+    }
   }
 }

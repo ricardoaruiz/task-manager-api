@@ -1,5 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
+import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
 import {
   UpdateTaskBodySchema,
   UpdateTaskParamsSchema,
@@ -16,6 +17,7 @@ export const updateTaskRoute: FastifyPluginAsyncZod<UpdateTaskOptions> = async (
   app.put(
     '/:id',
     {
+      preHandler: [checkAuthMiddleware],
       schema: {
         summary: 'Update a task by ID',
         description:

@@ -1,5 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
+import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
 import {
   DeleteTaskParamsSchema,
   DeleteTaskRsponseSuccessSchema,
@@ -15,6 +16,7 @@ export const deleteTaskRoute: FastifyPluginAsyncZod<DeleteTaskOptions> = async (
   app.delete(
     '/:id',
     {
+      preHandler: [checkAuthMiddleware],
       schema: {
         summary: 'Delete a task by ID',
         description: 'Deletes a task from the system using its unique ID.',

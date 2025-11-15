@@ -1,5 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
+import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
 import {
   LoadTaskParamsSchema,
   LoadTaskResponseNotFoundSchema,
@@ -16,6 +17,7 @@ export const loadTaskRoute: FastifyPluginAsyncZod<LoadTaskOptions> = async (
   app.get(
     '/:id',
     {
+      preHandler: [checkAuthMiddleware],
       schema: {
         summary: 'Load a task by ID',
         description: 'Loads a task from the system using its unique ID.',

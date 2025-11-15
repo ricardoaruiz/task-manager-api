@@ -1,5 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
+import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
 import {
   CompleteTaskParamsSchema,
   CompleteTaskResponseSuccessSchema,
@@ -14,6 +15,7 @@ export const completeTaskRoute: FastifyPluginAsyncZod<
   app.patch(
     '/:id',
     {
+      preHandler: [checkAuthMiddleware],
       schema: {
         summary: 'Complete a task by ID',
         description:

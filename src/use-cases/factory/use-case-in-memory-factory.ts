@@ -3,6 +3,7 @@ import { InMemoryUserRepository } from '@/repositories/in-memory/in-memory-user.
 import type { TasksRepository } from '@/repositories/interfaces/task.repository'
 import type { UserRepository } from '@/repositories/interfaces/user.repository'
 import { LoginUseCase } from '../auth/login.use-case'
+import { SignupUseCase } from '../auth/signup.use-case'
 import {
   CompleteTaskUseCase,
   CreateTaskUseCase,
@@ -28,6 +29,10 @@ export class InMemoryUseCaseFactory implements UseCaseFactory {
       InMemoryUseCaseFactory.instance = new InMemoryUseCaseFactory()
     }
     return InMemoryUseCaseFactory.instance
+  }
+
+  makeSignupUseCase(): SignupUseCase {
+    return new SignupUseCase(this.userRepository)
   }
 
   makeLoginUseCase(): LoginUseCase {

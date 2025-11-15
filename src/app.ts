@@ -1,3 +1,4 @@
+import cookie from '@fastify/cookie'
 import cors from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
 import scalarApiReference from '@scalar/fastify-api-reference'
@@ -8,12 +9,15 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
+import { authRoutes } from './routes/auth'
 import { healthRoutes } from './routes/health'
 import { tasksRoutes } from './routes/tasks'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
+
+app.register(cookie)
 
 // CORS
 app.register(cors, {
@@ -40,6 +44,7 @@ app.register(scalarApiReference, {
 })
 
 app.register(healthRoutes, { prefix: '/health' })
+app.register(authRoutes, { prefix: '/auth' })
 app.register(tasksRoutes, { prefix: '/tasks' })
 
 export { app }

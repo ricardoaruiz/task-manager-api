@@ -1,5 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
+import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
 import {
   CreateTaskBodySchema,
   CreateTaskResponseSuccessSchema,
@@ -15,6 +16,7 @@ export const createTaskRoute: FastifyPluginAsyncZod<RouteOptions> = async (
   app.post(
     '/',
     {
+      preHandler: [checkAuthMiddleware],
       schema: {
         summary: 'Create a new task',
         description:

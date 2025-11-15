@@ -31,6 +31,7 @@ describe('LoginUseCase', () => {
         id: user.id,
         name: 'Test User',
         email: 'test@example.com',
+        token: expect.any(String),
       }),
     )
   })
