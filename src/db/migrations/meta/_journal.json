@@ -8,6 +8,13 @@
       "when": 1763131248379,
       "tag": "0000_silly_peter_quill",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1763235836984,
+      "tag": "0001_light_anthem",
+      "breakpoints": true
     }
   ]
 }
