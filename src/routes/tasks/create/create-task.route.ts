@@ -18,7 +18,7 @@ export const createTaskRoute: FastifyPluginAsyncZod<RouteOptions> = async (
     {
       preHandler: [checkAuthMiddleware],
       schema: {
-        summary: 'Create a new task',
+        summary: 'Create a task',
         description:
           'Creates a new task with the given title and optional description.',
         tags: ['Tasks'],

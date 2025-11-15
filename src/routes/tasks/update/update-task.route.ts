@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
 import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
+import { CommonUnauthorizedResponseSchema } from '@/routes/routes.schame'
 import {
   UpdateTaskBodySchema,
   UpdateTaskParamsSchema,
@@ -19,7 +20,7 @@ export const updateTaskRoute: FastifyPluginAsyncZod<UpdateTaskOptions> = async (
     {
       preHandler: [checkAuthMiddleware],
       schema: {
-        summary: 'Update a task by ID',
+        summary: 'Update a task',
         description:
           'Updates the details of a task in the system using its unique ID.',
         tags: ['Tasks'],
@@ -27,6 +28,7 @@ export const updateTaskRoute: FastifyPluginAsyncZod<UpdateTaskOptions> = async (
         body: UpdateTaskBodySchema,
         response: {
           [StatusCodes.NO_CONTENT]: UpdateTaskResponseSuccessSchema,
+          [StatusCodes.UNAUTHORIZED]: CommonUnauthorizedResponseSchema,
         },
       },
     },

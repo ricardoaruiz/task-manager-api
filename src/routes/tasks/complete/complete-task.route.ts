@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
 import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
+import { CommonUnauthorizedResponseSchema } from '@/routes/routes.schame'
 import {
   CompleteTaskParamsSchema,
   CompleteTaskResponseSuccessSchema,
@@ -17,13 +18,14 @@ export const completeTaskRoute: FastifyPluginAsyncZod<
     {
       preHandler: [checkAuthMiddleware],
       schema: {
-        summary: 'Complete a task by ID',
+        summary: 'Complete a task',
         description:
           'Marks a task as completed in the system using its unique ID.',
         tags: ['Tasks'],
         params: CompleteTaskParamsSchema,
         response: {
           [StatusCodes.NO_CONTENT]: CompleteTaskResponseSuccessSchema,
+          [StatusCodes.UNAUTHORIZED]: CommonUnauthorizedResponseSchema,
         },
       },
     },

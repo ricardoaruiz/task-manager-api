@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
 import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
+import { CommonUnauthorizedResponseSchema } from '@/routes/routes.schame'
 import {
   LoadTaskParamsSchema,
   LoadTaskResponseNotFoundSchema,
@@ -19,13 +20,14 @@ export const loadTaskRoute: FastifyPluginAsyncZod<LoadTaskOptions> = async (
     {
       preHandler: [checkAuthMiddleware],
       schema: {
-        summary: 'Load a task by ID',
+        summary: 'Load a task',
         description: 'Loads a task from the system using its unique ID.',
         tags: ['Tasks'],
         params: LoadTaskParamsSchema,
         response: {
           [StatusCodes.OK]: LoadTaskRsponseSuccessSchema,
           [StatusCodes.NOT_FOUND]: LoadTaskResponseNotFoundSchema,
+          [StatusCodes.UNAUTHORIZED]: CommonUnauthorizedResponseSchema,
         },
       },
     },

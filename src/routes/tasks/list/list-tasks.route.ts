@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
 import { checkAuthMiddleware } from '@/middlewares/check-auth.middleware'
+import { CommonUnauthorizedResponseSchema } from '@/routes/routes.schame'
 import {
   ListTaskQueryStringSchema,
   ListTaskRouteResponseSuccessSchema,
@@ -18,12 +19,13 @@ export const listTasksRoute: FastifyPluginAsyncZod<RouteOptions> = async (
     {
       preHandler: [checkAuthMiddleware],
       schema: {
-        summary: 'List all tasks',
+        summary: 'List tasks',
         description: 'Retrieve a list of all tasks',
         tags: ['Tasks'],
         querystring: ListTaskQueryStringSchema,
         response: {
           [StatusCodes.OK]: ListTaskRouteResponseSuccessSchema,
+          [StatusCodes.UNAUTHORIZED]: CommonUnauthorizedResponseSchema,
         },
       },
     },

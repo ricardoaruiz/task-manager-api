@@ -15,7 +15,7 @@ export const loginRoute: FastifyPluginAsyncZod<RouteOptions> = async (
     '/login',
     {
       schema: {
-        summary: 'Authenticate a user and return a token',
+        summary: 'SignIn',
         description:
           'This endpoint allows a user to log in by providing their credentials. Upon successful authentication, a JWT token is returned.',
         tags: ['Auth'],

@@ -11,7 +11,7 @@ export const signupRoute: FastifyPluginAsyncZod<RouteOptions> = async (
     '/signup',
     {
       schema: {
-        summary: 'Sign up a new user',
+        summary: 'SignUp',
         description: 'Creates a new user account with the provided details.',
         tags: ['Auth'],
         body: SignupBodySchema,
