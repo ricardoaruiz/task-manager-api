@@ -2,6 +2,10 @@ import { DrizzleTaskRepository } from '@/repositories/drizzle/drizzle-task.repos
 import { DrizzleUserRepository } from '@/repositories/drizzle/drizzle-user.repository'
 import type { TasksRepository } from '@/repositories/interfaces/task.repository'
 import type { UserRepository } from '@/repositories/interfaces/user.repository'
+import { BcryptHashService } from '@/services/hash/hash.service'
+import type { HashService } from '@/services/hash/hash.service.interface'
+import { JoseTokenService } from '@/services/token/token.service'
+import type { TokenService } from '@/services/token/token.service.interface'
 import { LoginUseCase } from '../auth/login.use-case'
 import { SignupUseCase } from '../auth/signup.use-case'
 import {
@@ -19,10 +23,14 @@ export class DatabaseUseCaseFactory implements UseCaseFactory {
 
   private readonly tasksRespoitory: TasksRepository
   private readonly userRepository: UserRepository
+  private readonly tokenService: TokenService
+  private readonly hashService: HashService
 
   private constructor() {
     this.tasksRespoitory = new DrizzleTaskRepository()
     this.userRepository = new DrizzleUserRepository()
+    this.tokenService = new JoseTokenService()
+    this.hashService = new BcryptHashService()
   }
   static getInstance(): DatabaseUseCaseFactory {
     if (!DatabaseUseCaseFactory.instance) {
@@ -32,11 +40,15 @@ export class DatabaseUseCaseFactory implements UseCaseFactory {
   }
 
   makeSignupUseCase(): SignupUseCase {
-    return new SignupUseCase(this.userRepository)
+    return new SignupUseCase(this.userRepository, this.hashService)
   }
 
   makeLoginUseCase(): LoginUseCase {
-    return new LoginUseCase(this.userRepository)
+    return new LoginUseCase(
+      this.userRepository,
+      this.hashService,
+      this.tokenService,
+    )
   }
 
   makeListTasksUseCase(): ListTasksUseCase {

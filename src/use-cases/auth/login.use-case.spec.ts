@@ -2,16 +2,24 @@ import bcrypt from 'bcryptjs'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryUserRepository } from '@/repositories/in-memory/in-memory-user.repository'
 import type { UserRepository } from '@/repositories/interfaces/user.repository'
+import { BcryptHashService } from '@/services/hash/hash.service'
+import type { HashService } from '@/services/hash/hash.service.interface'
+import { JoseTokenService } from '@/services/token/token.service'
+import type { TokenService } from '@/services/token/token.service.interface'
 import { InvalidCredentialsError } from '../errors/InvalidCredentialsError'
 import { LoginUseCase } from './login.use-case'
 
 describe('LoginUseCase', () => {
   let userRespository: UserRepository
+  let hashService: HashService
+  let tokenService: TokenService
   let sut: LoginUseCase
 
   beforeEach(() => {
     userRespository = new InMemoryUserRepository()
-    sut = new LoginUseCase(userRespository)
+    hashService = new BcryptHashService()
+    tokenService = new JoseTokenService()
+    sut = new LoginUseCase(userRespository, hashService, tokenService)
   })
 
   it('should able to login with an existing user and valid credentials', async () => {

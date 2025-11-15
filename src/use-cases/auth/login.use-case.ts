@@ -1,8 +1,6 @@
-import bcrypt from 'bcryptjs'
-import { SignJWT } from 'jose'
 import type { LoginInput, LoginOutput } from '@/@types/domain/auth'
-import env from '@/env'
 import type { UserRepository } from '@/repositories/interfaces/user.repository'
+import type { HashService, TokenService } from '@/services'
 import { InvalidCredentialsError } from '../errors/InvalidCredentialsError'
 
 /**
@@ -10,13 +8,15 @@ import { InvalidCredentialsError } from '../errors/InvalidCredentialsError'
  * It verifies user credentials and returns user data if valid.
  * Throws InvalidCredentialsError if credentials are invalid.
  * @param userRepository - The user repository to interact with user data.
- * @example
- * const loginUseCase = new LoginUseCase(userRepository)
- * const user = await loginUseCase.execute({ email: 'test@example.com', password: 'password123' })
- * console.log(user) // { id: 'user-id', name: 'Test User', email: 'test@example.com' }
+ * @param hashService - The hash service to verify passwords.
+ * @param tokenService - The token service to generate authentication tokens.
  */
 export class LoginUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly hashService: HashService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   async execute(credentials: LoginInput): Promise<LoginOutput> {
     const user = await this.userRepository.findByEmail(credentials.email)
@@ -25,25 +25,20 @@ export class LoginUseCase {
       throw new InvalidCredentialsError()
     }
 
-    // TODO criar servico para gerenciamento de senhas
-    const isPasswordValid = bcrypt.compareSync(
-      credentials.password,
-      user.password,
-    )
-
-    if (!isPasswordValid) {
+    if (
+      !this.hashService.compare({
+        plainText: credentials.password,
+        hashedText: user.password,
+      })
+    ) {
       throw new InvalidCredentialsError()
     }
 
-    // TODO criar servico para gerenciamento de tokens
-    const token = await new SignJWT({
-      sub: user.id,
+    const token = await this.tokenService.generateToken({
+      id: user.id,
       email: user.email,
       name: user.name,
     })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setExpirationTime('2h')
-      .sign(new TextEncoder().encode(env.JWT_SECRET))
 
     const { password: _, ...userWithoutPassword } = user
 

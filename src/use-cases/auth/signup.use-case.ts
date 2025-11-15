@@ -1,6 +1,6 @@
-import bcrypt from 'bcryptjs'
 import type { CreateUserInput, User } from '@/@types/domain/user'
 import type { UserRepository } from '@/repositories/interfaces/user.repository'
+import type { HashService } from '@/services'
 import { UserAlreadyExistsError } from '../errors/UserAlreadyExistsError'
 
 /**
@@ -9,7 +9,10 @@ import { UserAlreadyExistsError } from '../errors/UserAlreadyExistsError'
  * If not, it creates a new user in the repository.
  */
 export class SignupUseCase {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly hashService: HashService,
+  ) {}
 
   async execute({ name, email, password }: CreateUserInput): Promise<User> {
     const checkExistingUser = await this.userRepository.findByEmail(email)
@@ -21,8 +24,7 @@ export class SignupUseCase {
     const newUser = await this.userRepository.create({
       name,
       email,
-      // TODO mudar para um servico de gerenciamento de senhas
-      password: bcrypt.hashSync(password, 10),
+      password: this.hashService.generate({ plainText: password }),
     })
     return newUser
   }

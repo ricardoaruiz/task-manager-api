@@ -1,16 +1,20 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryUserRepository } from '@/repositories/in-memory/in-memory-user.repository'
 import type { UserRepository } from '@/repositories/interfaces/user.repository'
+import { BcryptHashService } from '@/services/hash/hash.service'
+import type { HashService } from '@/services/hash/hash.service.interface'
 import { UserAlreadyExistsError } from '../errors/UserAlreadyExistsError'
 import { SignupUseCase } from './signup.use-case'
 
 describe('Signup Use Case', () => {
   let userRepository: UserRepository
+  let hashService: HashService
   let sut: SignupUseCase
 
   beforeEach(() => {
     userRepository = new InMemoryUserRepository()
-    sut = new SignupUseCase(userRepository)
+    hashService = new BcryptHashService()
+    sut = new SignupUseCase(userRepository, hashService)
   })
 
   it('shoud be able to create a new user', async () => {
