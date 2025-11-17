@@ -1,13 +1,7 @@
 import { jwtVerify, SignJWT } from 'jose'
 import env from '@/env'
-import type { TokenService } from '..'
-import type { GenerateTokenParams } from './token.types'
-
-type JwtPayload = {
-  sub: string
-  name: string
-  email: string
-}
+import type { TokenService } from './token.service.interface'
+import type { GenerateTokenParams, JwtPayload } from './token.types'
 
 export class JoseTokenService implements TokenService {
   async generateToken({

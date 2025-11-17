@@ -1,4 +1,4 @@
-import type { GenerateTokenParams } from './token.types'
+import type { GenerateTokenParams, JwtPayload } from './token.types'
 
 /**
  * Interface for the Token Service.
@@ -11,4 +11,11 @@ export interface TokenService {
    * @returns A promise that resolves to the generated token string.
    */
   generateToken(params: GenerateTokenParams): Promise<string>
+
+  /**
+   * Verifies the provided token and returns the payload if valid.
+   * @param token - The token string to verify.
+   * @returns A promise that resolves to the token payload or null if invalid.
+   */
+  verifyToken(token: string): Promise<JwtPayload | null>
 }

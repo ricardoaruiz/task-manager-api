@@ -19,6 +19,5 @@ export interface HashService {
    * @param hashedText - The hashed text to compare against.
    * @returns True if the texts match, false otherwise.
    */
-  generate({ plainText }: GenerateHashParams): string
   compare({ plainText, hashedText }: CompareHashParams): boolean
 }
