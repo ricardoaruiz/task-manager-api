@@ -17,13 +17,15 @@
 
 ## 🎯 Sobre o Projeto
 
-A **Task Manager API** é uma aplicação backend moderna que permite gerenciar tarefas de forma eficiente. O projeto foi desenvolvido seguindo os princípios de **Clean Architecture**, **SOLID** e **Domain-Driven Design (DDD)**, garantindo:
+A **Task Manager API** é uma aplicação backend moderna que permite gerenciar tarefas de forma eficiente com **sistema de autenticação completo**. O projeto foi desenvolvido seguindo os princípios de **Clean Architecture**, **SOLID** e **Domain-Driven Design (DDD)**, garantindo:
 
 - ✅ **Escalabilidade**: Arquitetura modular e bem organizada
 - ✅ **Testabilidade**: Cobertura de testes abrangente
 - ✅ **Maintibilidade**: Código limpo e bem documentado
 - ✅ **Performance**: Otimizações e boas práticas aplicadas
 - ✅ **Type Safety**: TypeScript em todo o projeto
+- ✅ **Segurança**: Sistema completo de autenticação JWT
+- ✅ **Autorização**: Controle de acesso a recursos protegidos
 
 ## 🛠 Tecnologias Utilizadas
 
@@ -57,7 +59,12 @@ A **Task Manager API** é uma aplicação backend moderna que permite gerenciar 
 - **[Docker Compose](https://docs.docker.com/compose/)** - Orquestração de containers
 - **[Bitnami PostgreSQL](https://hub.docker.com/r/bitnami/postgresql)** - Imagem PostgreSQL otimizada
 
-### 🔑 **Utilities**
+### 🔑 **Authentication & Security**
+- **[bcryptjs](https://www.npmjs.com/package/bcryptjs)** - Hashing de senhas com bcrypt
+- **[jose](https://www.npmjs.com/package/jose)** - Geração e verificação de JWT tokens
+- **[@fastify/cookie](https://github.com/fastify/fastify-cookie)** - Manipulação de cookies HTTP
+
+### 🔧 **Utilities**
 - **[UUIDv7](https://www.npmjs.com/package/uuidv7)** - Geração de IDs únicos e ordenáveis
 - **[http-status-codes](https://www.npmjs.com/package/http-status-codes)** - Constantes HTTP status
 - **[dotenv](https://www.npmjs.com/package/dotenv)** - Gerenciamento de variáveis de ambiente
@@ -102,26 +109,48 @@ O projeto segue os princípios da **Clean Architecture** com uma abordagem hexag
 │   ├── 📄 env.ts                    # Configuração de ambiente
 │   │
 │   ├── 📁 @types/                   # Definições de tipos TypeScript
+│   │   ├── 📄 fastify.d.ts          # Extensões de tipos do Fastify
 │   │   └── 📁 domain/               # Types do domínio da aplicação
+│   │       ├── 📄 auth.ts           # Types de autenticação
+│   │       ├── 📄 task.ts           # Types de tarefas
+│   │       └── 📄 user.ts           # Types de usuários
 │   │
 │   ├── 📁 db/                       # Configuração do banco de dados
-│   │   ├── 📄 schema.ts             # Exportação dos schemas
-│   │   ├── 📄 tasks-table.ts        # Schema da tabela tasks
+│   │   ├── � schema/               # Schemas das tabelas
+│   │   │   ├── 📄 index.ts          # Exportação dos schemas
+│   │   │   ├── 📄 tasks-table.ts    # Schema da tabela tasks
+│   │   │   └── 📄 user-table.ts     # Schema da tabela users
 │   │   ├── 📁 migrations/           # Arquivos de migração
 │   │   └── 📁 seed/                 # Scripts de seed
+│   │       ├── 📄 seed.ts           # Script principal de seed
+│   │       ├── 📄 tasks.ts          # Seed das tarefas
+│   │       └── 📄 users.ts          # Seed dos usuários
 │   │
 │   ├── 📁 lib/                      # Bibliotecas e utilitários
 │   │   └── 📄 drizzle.ts            # Configuração do Drizzle ORM
 │   │
+│   ├── 📁 middlewares/              # Middlewares da aplicação
+│   │   └── 📄 check-auth.middleware.ts # Middleware de autenticação
+│   │
 │   ├── 📁 repositories/             # Camada de acesso a dados
 │   │   ├── 📁 drizzle/              # Implementação com Drizzle
+│   │   │   ├── 📄 drizzle-task.repository.ts
+│   │   │   └── 📄 drizzle-user.repository.ts
 │   │   ├── 📁 in-memory/            # Implementação em memória (testes)
+│   │   │   ├── 📄 in-memory-task.repository.ts
+│   │   │   └── 📄 in-memory-user.repository.ts
 │   │   └── 📁 interfaces/           # Contratos dos repositórios
+│   │       ├── 📄 task.repository.ts
+│   │       └── 📄 user.repository.ts
 │   │
 │   ├── 📁 routes/                   # Rotas HTTP da aplicação
+│   │   ├── 📄 routes.schame.ts      # Schemas comuns das rotas
+│   │   ├── 📁 auth/                 # Rotas de autenticação
+│   │   │   ├── 📁 login/            # POST /auth/login
+│   │   │   └── 📁 signup/           # POST /auth/signup
 │   │   ├── 📁 health/               # Rotas de health check
 │   │   │   └── 📁 check/            # GET /health/check
-│   │   └── 📁 tasks/                # Rotas de tarefas
+│   │   └── 📁 tasks/                # Rotas de tarefas (protegidas)
 │   │       ├── 📁 create/           # POST /tasks
 │   │       ├── 📁 list/             # GET /tasks
 │   │       ├── 📁 load/             # GET /tasks/:id
@@ -129,7 +158,21 @@ O projeto segue os princípios da **Clean Architecture** com uma abordagem hexag
 │   │       ├── 📁 delete/           # DELETE /tasks/:id
 │   │       └── 📁 complete/         # PATCH /tasks/:id
 │   │
+│   ├── 📁 services/                 # Serviços da aplicação
+│   │   ├── 📄 index.ts              # Exportação dos serviços
+│   │   ├── 📁 hash/                 # Serviço de hashing
+│   │   │   ├── 📄 hash.service.ts
+│   │   │   ├── 📄 hash.service.interface.ts
+│   │   │   └── 📄 hash.types.ts
+│   │   └── 📁 token/                # Serviço de tokens JWT
+│   │       ├── 📄 token.service.ts
+│   │       ├── 📄 token.service.interface.ts
+│   │       └── 📄 token.types.ts
+│   │
 │   └── 📁 use-cases/                # Lógica de negócio
+│       ├── 📁 auth/                 # Use cases de autenticação
+│       │   ├── 📄 login.use-case.ts
+│       │   └── 📄 signup.use-case.ts
 │       ├── 📁 errors/               # Erros customizados
 │       ├── 📁 factory/              # Factory de use cases
 │       └── 📁 tasks/                # Use cases de tarefas
@@ -186,6 +229,7 @@ cp .env.example .env
 # PORT=3000
 # PERSISTENCE_TYPE=database
 # DATABASE_URL=postgresql://postgres:postgres@localhost:5432/task_manager
+# JWT_SECRET=your-super-secret-jwt-key
 ```
 
 4. **Inicie o ambiente completo (recomendado):**
@@ -237,6 +281,9 @@ PERSISTENCE_TYPE=database
 
 # URL de conexão com PostgreSQL
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/task_manager
+
+# Chave secreta para assinatura dos tokens JWT
+JWT_SECRET=your-super-secret-jwt-key
 ```
 
 **Tipos de Persistência:**
@@ -259,7 +306,14 @@ Resposta esperada:
 
 ### 🌱 **Dados de Exemplo**
 
-O projeto inclui um sistema de seed que popula o banco com 20 tarefas de exemplo:
+O projeto inclui um sistema de seed que popula o banco com dados de exemplo:
+
+**👥 Usuários:**
+- **Rick Ruiz**: `rick@email.com` (senha: `123456`)
+- **Gui Ruiz**: `gui@email.com` (senha: `123456`)
+
+**📋 Tarefas:**
+- 20 tarefas de exemplo distribuídas entre os usuários
 - 10 tarefas **não completadas** (IDs ímpares)
 - 10 tarefas **completadas** (IDs pares)
 
@@ -272,6 +326,7 @@ Exemplo de tarefa criada:
 - **Título**: "Task #1", "Task #2", etc.
 - **Descrição**: "Description Task #1", "Description Task #2", etc.
 - **Status**: Alternado entre completo/incompleto
+- **Usuário**: Associada aos usuários de exemplo
 
 ## 🔧 Scripts Disponíveis
 
@@ -340,10 +395,58 @@ Verifica se a API está funcionando.
 }
 ```
 
-### 📋 **Tasks Endpoints**
+### � **Authentication Endpoints**
+
+#### `POST /auth/signup`
+Registra um novo usuário no sistema.
+
+**Body:**
+```json
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "password": "123456",
+  "passwordConfirmation": "123456"
+}
+```
+
+**Response (201):**
+```json
+{
+  "id": "01HZ1234567890ABCDEFGHIJKL",
+  "name": "João Silva",
+  "email": "joao@email.com"
+}
+```
+
+#### `POST /auth/login`
+Autentica um usuário e retorna um token JWT.
+
+**Body:**
+```json
+{
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
+
+**Response (200):**
+```
+Status: 200 OK
+Set-Cookie: token=<JWT_TOKEN>; HttpOnly; Secure; SameSite=Strict; Max-Age=7200
+```
+
+> 🔒 **Nota**: O token JWT é retornado como um cookie HTTP-only para maior segurança.
+
+### �📋 **Tasks Endpoints** *(Protegidos - Requerem Autenticação)*
 
 #### `GET /tasks`
-Lista todas as tarefas com paginação e filtros opcionais.
+Lista todas as tarefas do usuário autenticado com paginação e filtros opcionais.
+
+**Headers:**
+```
+Cookie: token=<JWT_TOKEN>
+```
 
 **Query Parameters:**
 - `title` (string, opcional): Filtro por título
@@ -366,7 +469,12 @@ Lista todas as tarefas com paginação e filtros opcionais.
 ```
 
 #### `POST /tasks`
-Cria uma nova tarefa.
+Cria uma nova tarefa para o usuário autenticado.
+
+**Headers:**
+```
+Cookie: token=<JWT_TOKEN>
+```
 
 **Body:**
 ```json
@@ -387,7 +495,12 @@ Cria uma nova tarefa.
 ```
 
 #### `GET /tasks/:id`
-Busca uma tarefa específica pelo ID.
+Busca uma tarefa específica do usuário autenticado pelo ID.
+
+**Headers:**
+```
+Cookie: token=<JWT_TOKEN>
+```
 
 **Response (200):**
 ```json
@@ -406,8 +519,18 @@ Busca uma tarefa específica pelo ID.
 }
 ```
 
+**Response (401):**
+```
+Status: 401 Unauthorized
+```
+
 #### `PUT /tasks/:id`
-Atualiza uma tarefa existente.
+Atualiza uma tarefa existente do usuário autenticado.
+
+**Headers:**
+```
+Cookie: token=<JWT_TOKEN>
+```
 
 **Body:**
 ```json
@@ -420,12 +543,22 @@ Atualiza uma tarefa existente.
 **Response (204):** *(No Content)*
 
 #### `PATCH /tasks/:id`
-Marca uma tarefa como completada.
+Marca uma tarefa do usuário autenticado como completada.
+
+**Headers:**
+```
+Cookie: token=<JWT_TOKEN>
+```
 
 **Response (204):** *(No Content)*
 
 #### `DELETE /tasks/:id`
-Remove uma tarefa.
+Remove uma tarefa do usuário autenticado.
+
+**Headers:**
+```
+Cookie: token=<JWT_TOKEN>
+```
 
 **Response (200):**
 ```json
@@ -443,9 +576,26 @@ Remove uma tarefa.
 - `201` - Created (recurso criado)
 - `204` - No Content (sucesso sem conteúdo)
 - `400` - Bad Request (dados inválidos)
+- `401` - Unauthorized (não autenticado)
 - `404` - Not Found (recurso não encontrado)
 - `422` - Unprocessable Entity (validação falhou)
 - `500` - Internal Server Error (erro interno)
+
+### 🔐 **Sistema de Autenticação**
+
+A API utiliza **JWT (JSON Web Tokens)** para autenticação com as seguintes características:
+
+- **🍪 Cookies HTTP-only**: Tokens armazenados em cookies seguros
+- **⏰ Expiração**: Tokens válidos por 2 horas
+- **🔒 Proteção**: Rotas de tarefas protegidas por middleware de autenticação
+- **🛡️ Segurança**: Cookies com flags `HttpOnly`, `Secure` e `SameSite=Strict`
+
+**Fluxo de Autenticação:**
+1. Usuário faz login via `POST /auth/login`
+2. API retorna token JWT como cookie HTTP-only
+3. Cliente envia cookie automaticamente nas próximas requisições
+4. Middleware verifica e decodifica o token
+5. Usuário autenticado pode acessar rotas protegidas
 
 ## 🧪 Testes
 
@@ -453,9 +603,11 @@ O projeto possui uma suite de testes abrangente usando **Vitest**:
 
 ### 🎯 **Tipos de Testes**
 
-- **Unit Tests**: Testam componentes isolados
+- **Unit Tests**: Testam componentes isolados (use cases, services)
+- **Authentication Tests**: Testam fluxos de login, signup e validação de tokens
+- **Authorization Tests**: Testam middleware de autenticação e controle de acesso
 - **Integration Tests**: Testam a integração entre camadas
-- **E2E Tests**: Testam fluxos completos da API
+- **Repository Tests**: Testam implementações in-memory e database
 
 ### 📊 **Cobertura de Testes**
 
@@ -467,11 +619,13 @@ Os relatórios são gerados em `coverage/index.html` e podem ser visualizados no
 
 ### 🔧 **Configuração de Testes**
 
-- **In-memory database**: Testes isolados sem dependência do PostgreSQL
-- **Mock factories**: Criação de dados de teste consistentes
+- **In-memory repositories**: Testes isolados sem dependência do PostgreSQL
+- **Mock services**: Hash e token services mockados para testes determinísticos
+- **Factory pattern**: Factories separadas para testes (InMemoryUseCaseFactory)
 - **Setup automático**: Configuração automática do ambiente de teste (vitest.setup.ts)
 - **Path mapping**: Suporte a imports absolutos com `@/` nos testes
 - **Coverage exclusions**: Arquivos de configuração e interfaces excluídos da cobertura
+- **Authentication mocking**: Simulação de contexto de usuário autenticado nos testes
 
 ### 🎨 **Boas Práticas**
 
@@ -542,14 +696,19 @@ npm run test:ui
 
 ### 🎯 **Features Implementadas**
 
+- ✅ **Sistema de Autenticação Completo**: JWT com cookies HTTP-only seguros
+- ✅ **Gerenciamento de Usuários**: Registro, login e autenticação
+- ✅ **Controle de Acesso**: Middleware de autenticação para rotas protegidas
+- ✅ **Relacionamento de Dados**: Tarefas associadas a usuários específicos
 - ✅ **Documentação Interativa**: Interface Scalar para testar todos os endpoints
 - ✅ **Dual Persistence**: Suporte a banco PostgreSQL e repositório em memória
-- ✅ **Data Seeding**: Sistema automático de população do banco com dados de exemplo
+- ✅ **Data Seeding**: Sistema automático de população com usuários e tarefas
 - ✅ **Environment Scripts**: Scripts para gerenciar todo o ambiente de desenvolvimento
-- ✅ **Comprehensive Testing**: Testes unitários para todos os use cases
+- ✅ **Comprehensive Testing**: Testes unitários para todos os use cases e auth
 - ✅ **Type Safety**: Validação completa com Zod e tipagem TypeScript
 - ✅ **Modern Tooling**: Biome para linting/formatting, Vitest para testes
 - ✅ **Production Ready**: Build otimizado com TSUP e configurações de produção
+- ✅ **Security First**: Hash de senhas com bcrypt, tokens JWT seguros
 
 ### 🎮 **Comandos Úteis**
 
@@ -559,6 +718,20 @@ npm run environment:up
 
 # Testar a API rapidamente
 curl http://localhost:3000/health/check
+
+# Registrar um novo usuário
+curl -X POST http://localhost:3000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@email.com","password":"123456","passwordConfirmation":"123456"}'
+
+# Fazer login (salva cookie automaticamente)
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"rick@email.com","password":"123456"}' \
+  -c cookies.txt
+
+# Listar tarefas (usando cookie salvo)
+curl http://localhost:3000/tasks -b cookies.txt
 
 # Ver dados no banco
 npm run db:studio
