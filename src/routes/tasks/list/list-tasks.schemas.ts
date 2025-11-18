@@ -11,7 +11,7 @@ export const ListTaskQueryStringSchema = z4.object({
 })
 
 export const ListTaskRouteResponseSuccessSchema = z4.object({
-  data: z4.array(
+  tasks: z4.array(
     z4.object({
       id: z4.string().describe('The unique identifier of the task'),
       title: z4.string().describe('The title of the task'),

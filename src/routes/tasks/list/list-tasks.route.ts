@@ -45,7 +45,7 @@ export const listTasksRoute: FastifyPluginAsyncZod<RouteOptions> = async (
         ...(itemsPerPage ? { itemsPerPage } : {}),
       })
 
-      return reply.status(StatusCodes.OK).send({ data: tasks })
+      return reply.status(StatusCodes.OK).send({ tasks })
     },
   )
 }
