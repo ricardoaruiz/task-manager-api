@@ -8,6 +8,7 @@ import { JoseTokenService } from '@/services/token/token.service'
 import type { TokenService } from '@/services/token/token.service.interface'
 import { LoginUseCase } from '../auth/login.use-case'
 import { SignupUseCase } from '../auth/signup.use-case'
+import { MeUseCase } from '../profile/me.use-case'
 import {
   CompleteTaskUseCase,
   CreateTaskUseCase,
@@ -40,6 +41,7 @@ export class InMemoryUseCaseFactory implements UseCaseFactory {
     return InMemoryUseCaseFactory.instance
   }
 
+  // Auth
   makeSignupUseCase(): SignupUseCase {
     return new SignupUseCase(this.userRepository, this.hashService)
   }
@@ -52,6 +54,12 @@ export class InMemoryUseCaseFactory implements UseCaseFactory {
     )
   }
 
+  // Profile
+  makeMeUseCase(): MeUseCase {
+    return new MeUseCase(this.userRepository)
+  }
+
+  // Tasks
   makeListTasksUseCase(): ListTasksUseCase {
     return new ListTasksUseCase(this.tasksRespoitory)
   }

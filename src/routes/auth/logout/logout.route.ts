@@ -7,7 +7,7 @@ export const logoutRoute: FastifyPluginAsyncZod = async (app, _options) => {
     '/logout',
     {
       schema: {
-        summary: 'Logout',
+        summary: 'SignOut',
         description:
           'This endpoint logs out the user by clearing the authentication cookie.',
         tags: ['Auth'],

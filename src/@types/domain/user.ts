@@ -6,3 +6,7 @@ export type User = {
 }
 
 export type CreateUserInput = Omit<User, 'id'>
+export type MeInput = {
+  email: string
+}
+export type MeOutput = Omit<User, 'password'>

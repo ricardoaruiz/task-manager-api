@@ -11,6 +11,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { authRoutes } from './routes/auth'
 import { healthRoutes } from './routes/health'
+import { profileRoutes } from './routes/profile'
 import { tasksRoutes } from './routes/tasks'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
@@ -45,6 +46,7 @@ app.register(scalarApiReference, {
 
 app.register(healthRoutes, { prefix: '/health' })
 app.register(authRoutes, { prefix: '/auth' })
+app.register(profileRoutes, { prefix: '/profile' })
 app.register(tasksRoutes, { prefix: '/tasks' })
 
 export { app }
