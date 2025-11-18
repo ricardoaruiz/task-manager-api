@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { getUseCaseFactory } from '@/use-cases/factory'
 import { loginRoute } from './login'
+import { logoutRoute } from './logout/logout.route'
 import { signupRoute } from './signup/signup.route'
 
 export const authRoutes = (app: FastifyInstance) => {
@@ -14,4 +15,6 @@ export const authRoutes = (app: FastifyInstance) => {
   loginRoute(app, {
     useCases: { login: loginUseCase },
   })
+
+  logoutRoute(app, {})
 }

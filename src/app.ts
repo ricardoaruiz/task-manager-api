@@ -21,9 +21,9 @@ app.register(cookie)
 
 // CORS
 app.register(cors, {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  // credentials: true,
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true,
 })
 
 // Swagger API Documentation
