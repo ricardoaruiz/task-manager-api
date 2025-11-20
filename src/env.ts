@@ -9,6 +9,9 @@ const ENVIRONMENT_VARIABLES_SCHEMA = z4.object({
   PERSISTENCE_TYPE: z4.enum(['in-memory', 'database']),
   DATABASE_URL: z4.string(),
   JWT_SECRET: z4.string(),
+  ALLOWED_ORIGINS: z4
+    .string()
+    .transform((str) => str.split(',').map((origin) => origin.trim())),
 })
 
 const envVariables = ENVIRONMENT_VARIABLES_SCHEMA.parse(process.env)

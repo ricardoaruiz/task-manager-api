@@ -9,6 +9,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
+import envVariables from './env'
 import { authRoutes } from './routes/auth'
 import { healthRoutes } from './routes/health'
 import { profileRoutes } from './routes/profile'
@@ -22,7 +23,7 @@ app.register(cookie)
 
 // CORS
 app.register(cors, {
-  origin: 'http://localhost:5173',
+  origin: envVariables.ALLOWED_ORIGINS,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true,
 })
