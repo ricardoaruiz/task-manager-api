@@ -35,6 +35,14 @@ export class InMemoryTasksRepository implements TasksRepository {
       )
     }
 
+    if (filter?.status) {
+      if (filter.status === 'completed') {
+        filteredItems = this.items.filter((item) => item.completed_at !== null)
+      } else if (filter.status === 'pending') {
+        filteredItems = this.items.filter((item) => item.completed_at === null)
+      }
+    }
+
     if (page !== undefined) {
       const startIndex = (page - 1) * itemsPerPage
       const endIndex = startIndex + itemsPerPage

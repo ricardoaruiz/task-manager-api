@@ -3,6 +3,10 @@ import z4 from 'zod/v4'
 export const ListTaskQueryStringSchema = z4.object({
   title: z4.string().optional().describe('Filter by task title'),
   description: z4.string().optional().describe('Filter by task description'),
+  status: z4
+    .enum(['completed', 'pending'])
+    .optional()
+    .describe('Filter by task status'),
   page: z4.coerce.number().optional().describe('Page number for pagination'),
   itemsPerPage: z4.coerce
     .number()

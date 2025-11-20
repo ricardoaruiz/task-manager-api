@@ -1,4 +1,4 @@
-import { and, eq, ilike } from 'drizzle-orm'
+import { and, eq, ilike, isNotNull, isNull } from 'drizzle-orm'
 import type { CreateTaskInput, ListTasksInput, Task } from '@/@types/domain'
 import { tasksTable } from '@/db/schema/tasks-table'
 import db from '@/lib/drizzle'
@@ -22,6 +22,21 @@ export class DrizzleTaskRepository implements TasksRepository {
 
           params.filter?.description
             ? ilike(tasksTable.description, `%${params.filter.description}%`)
+            : undefined,
+
+          params.filter?.status === 'completed'
+            ? and(
+                params.filter.status === 'completed'
+                  ? isNotNull(tasksTable.completed_at)
+                  : undefined,
+              )
+            : undefined,
+          params.filter?.status === 'pending'
+            ? and(
+                params.filter.status === 'pending'
+                  ? isNull(tasksTable.completed_at)
+                  : undefined,
+              )
             : undefined,
         ),
       )

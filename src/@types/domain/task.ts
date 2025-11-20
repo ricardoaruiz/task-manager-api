@@ -6,9 +6,14 @@ export type Task = {
   user_id: string
 }
 
+type Filter = Partial<Omit<Task, 'id' | 'completed_at' | 'user_id'>> & {
+  status?: 'completed' | 'pending'
+}
+
 export type ListTasksInput = {
   user_id: string
-  filter?: Partial<Omit<Task, 'id' | 'completed_at' | 'user_id'>>
+  filter?: Filter
+  status?: 'completed' | 'pending'
   page?: number
   itemsPerPage?: number
 }

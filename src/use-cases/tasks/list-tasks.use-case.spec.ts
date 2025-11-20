@@ -30,6 +30,52 @@ describe('ListTasksUseCase', () => {
     expect(tasks).toHaveLength(2)
   })
 
+  it('should be able to get a task list with completed tasks', async () => {
+    for (let i = 1; i <= 4; i++) {
+      const task = await tasksRepository.create({
+        title: `Task ${i}`,
+        description: `Description ${i}`,
+        user_id,
+      })
+
+      if (i % 2 === 0) {
+        await tasksRepository.update({
+          ...task,
+          completed_at: new Date(),
+        })
+      }
+    }
+
+    const tasks = await sut.execute({
+      user_id,
+      filter: { status: 'completed' },
+    })
+    expect(tasks).toHaveLength(2)
+  })
+
+  it('should be able to get a task list with pending tasks', async () => {
+    for (let i = 1; i <= 4; i++) {
+      const task = await tasksRepository.create({
+        title: `Task ${i}`,
+        description: `Description ${i}`,
+        user_id,
+      })
+
+      if (i % 2 === 0) {
+        await tasksRepository.update({
+          ...task,
+          completed_at: new Date(),
+        })
+      }
+    }
+
+    const tasks = await sut.execute({
+      user_id,
+      filter: { status: 'pending' },
+    })
+    expect(tasks).toHaveLength(2)
+  })
+
   it('should be able to get a tasks list with title filter', async () => {
     for (let i = 1; i <= 4; i++) {
       await tasksRepository.create({
