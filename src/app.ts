@@ -40,7 +40,7 @@ app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 })
 
-// Scalar API Reference Documentation
+// Scalar API Reference Documentation API
 app.register(scalarApiReference, {
   routePrefix: '/docs',
 })
@@ -51,3 +51,7 @@ app.register(profileRoutes, { prefix: '/profile' })
 app.register(tasksRoutes, { prefix: '/tasks' })
 
 export { app }
+
+
+
+
