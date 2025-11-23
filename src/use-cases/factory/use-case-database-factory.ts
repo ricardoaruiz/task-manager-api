@@ -17,6 +17,7 @@ import {
   UpdateTaskUseCase,
 } from '../tasks'
 import { LoadTaskUseCase } from '../tasks/load-task.use-case'
+import { UnCompleteTaskUseCase } from '../tasks/uncomplete-task.use-case'
 import type { UseCaseFactory } from './use-case-interface-factory'
 
 export class DatabaseUseCaseFactory implements UseCaseFactory {
@@ -73,6 +74,10 @@ export class DatabaseUseCaseFactory implements UseCaseFactory {
 
   makeCompleteTaskUseCase(): CompleteTaskUseCase {
     return new CompleteTaskUseCase(this.tasksRespoitory)
+  }
+
+  makeUnCompleteTaskUseCase(): UnCompleteTaskUseCase {
+    return new UnCompleteTaskUseCase(this.tasksRespoitory)
   }
 
   makeUpdateTaskUseCase(): UpdateTaskUseCase {

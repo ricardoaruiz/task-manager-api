@@ -6,6 +6,7 @@ import type { CreateTaskUseCase } from '../tasks/create-task.use-case'
 import type { DeleteTaskUseCase } from '../tasks/delete-task.use-case'
 import type { ListTasksUseCase } from '../tasks/list-tasks.use-case'
 import type { LoadTaskUseCase } from '../tasks/load-task.use-case'
+import type { UnCompleteTaskUseCase } from '../tasks/uncomplete-task.use-case'
 
 export interface UseCaseFactory {
   // Auth
@@ -20,6 +21,7 @@ export interface UseCaseFactory {
   makeCreateTaskUseCase(): CreateTaskUseCase
   makeDeleteTaskUseCase(): DeleteTaskUseCase
   makeCompleteTaskUseCase(): CompleteTaskUseCase
+  makeUnCompleteTaskUseCase(): UnCompleteTaskUseCase
   makeUpdateTaskUseCase(): UpdateTaskUseCase
   makeLoadTaskUseCase(): LoadTaskUseCase
 }
