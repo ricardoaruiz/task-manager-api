@@ -7,11 +7,14 @@ export class InMemoryTasksRepository implements TasksRepository {
   list({
     user_id,
     filter,
+    isArchived,
     page,
     itemsPerPage = 10,
   }: ListTasksInput): Promise<Task[]> {
     let filteredItems: Task[] = this.items.filter(
-      (item) => item.user_id === user_id,
+      (item) =>
+        item.user_id === user_id &&
+        (isArchived ? item.archived_at !== null : item.archived_at === null),
     )
 
     if (filter?.title) {
@@ -76,6 +79,7 @@ export class InMemoryTasksRepository implements TasksRepository {
       title,
       description,
       completed_at: null,
+      archived_at: null,
       user_id,
     }
 

@@ -16,6 +16,9 @@ export class DrizzleTaskRepository implements TasksRepository {
       .where(
         and(
           eq(tasksTable.user_id, params.user_id),
+          params.isArchived
+            ? isNotNull(tasksTable.archived_at)
+            : isNull(tasksTable.archived_at),
           params.filter?.title
             ? ilike(tasksTable.title, `%${params.filter.title}%`)
             : undefined,
@@ -86,6 +89,7 @@ export class DrizzleTaskRepository implements TasksRepository {
     title,
     description,
     completed_at,
+    archived_at,
     id,
     user_id,
   }: Task): Promise<Task | null> {
@@ -95,6 +99,7 @@ export class DrizzleTaskRepository implements TasksRepository {
         title,
         description,
         completed_at,
+        archived_at,
       })
       .where(and(eq(tasksTable.id, id), eq(tasksTable.user_id, user_id)))
       .returning()

@@ -3,6 +3,7 @@ export type Task = {
   title: string
   description: string
   completed_at: Date | null
+  archived_at: Date | null
   user_id: string
 }
 
@@ -14,12 +15,13 @@ export type ListTasksInput = {
   user_id: string
   filter?: Filter
   status?: 'completed' | 'pending'
+  isArchived?: boolean
   page?: number
   itemsPerPage?: number
 }
-export type CreateTaskInput = Omit<Task, 'id' | 'completed_at'>
+export type CreateTaskInput = Omit<Task, 'id' | 'completed_at' | 'archived_at'>
 export type UpdateTaskInput = Partial<
-  Omit<Task, 'id' | 'completedAt' | 'user_id'>
+  Omit<Task, 'id' | 'completed_at' | 'archived_at' | 'user_id'>
 > & {
   user_id: string
 }

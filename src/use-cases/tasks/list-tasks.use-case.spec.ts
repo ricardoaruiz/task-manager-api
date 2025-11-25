@@ -17,7 +17,7 @@ describe('ListTasksUseCase', () => {
     expect(tasks).toHaveLength(0)
   })
 
-  it('should be able to get a tasks list with tasks', async () => {
+  it('should be able to get a tasks list with tasks non archived', async () => {
     for (let i = 1; i <= 2; i++) {
       await tasksRepository.create({
         title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
@@ -26,8 +26,43 @@ describe('ListTasksUseCase', () => {
       })
     }
 
+    const archivedTask = await tasksRepository.create({
+      title: 'Task Archived',
+      description: 'Description Archived',
+      user_id,
+    })
+
+    await tasksRepository.update({
+      ...archivedTask,
+      archived_at: new Date(),
+    })
+
     const tasks = await sut.execute({ user_id })
     expect(tasks).toHaveLength(2)
+  })
+
+  it('should be able to get a tasks list with tasks archived', async () => {
+    for (let i = 1; i <= 2; i++) {
+      await tasksRepository.create({
+        title: `Task ${i % 2 === 0 ? 'Even' : 'Odd'} ${i}`,
+        description: `Description ${i}`,
+        user_id,
+      })
+    }
+
+    const archivedTask = await tasksRepository.create({
+      title: 'Task Archived',
+      description: 'Description Archived',
+      user_id,
+    })
+
+    await tasksRepository.update({
+      ...archivedTask,
+      archived_at: new Date(),
+    })
+
+    const tasks = await sut.execute({ user_id, isArchived: true })
+    expect(tasks).toHaveLength(1)
   })
 
   it('should be able to get a task list with completed tasks', async () => {

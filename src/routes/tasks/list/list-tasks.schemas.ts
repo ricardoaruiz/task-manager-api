@@ -24,6 +24,10 @@ export const ListTaskRouteResponseSuccessSchema = z4.object({
         .date()
         .nullable()
         .describe('The completion date of the task, or null if not completed'),
+      archived_at: z4.coerce
+        .date()
+        .nullable()
+        .describe('The archival date of the task, or null if not archived'),
     }),
   ),
 })
