@@ -10,6 +10,7 @@ export const tasksTable = pgTable('tasks', {
   title: varchar({ length: 50 }).unique().notNull(),
   description: varchar({ length: 255 }).notNull(),
   completed_at: timestamp({ mode: 'date' }),
+  archived_at: timestamp({ mode: 'date' }),
   user_id: text()
     .notNull()
     .references(() => userTable.id, { onDelete: 'cascade' }),

@@ -8,6 +8,13 @@
       "when": 1763237780152,
       "tag": "0000_curved_bromley",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764090322775,
+      "tag": "0001_condemned_shadowcat",
+      "breakpoints": true
     }
   ]
 }
