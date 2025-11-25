@@ -7,6 +7,7 @@ import { listTasksRoute } from './list'
 import { loadTaskRoute } from './load'
 import { uncompleteTaskRoute } from './uncomplete'
 import { updateTaskRoute } from './update'
+import { archiveTaskRoute } from './archive/archive-task.route'
 
 export const tasksRoutes = async (app: FastifyInstance) => {
   const listTasksUseCase = getUseCaseFactory().makeListTasksUseCase()
@@ -16,6 +17,7 @@ export const tasksRoutes = async (app: FastifyInstance) => {
   const unCompleteTaskUseCase = getUseCaseFactory().makeUnCompleteTaskUseCase()
   const updateTaskUseCase = getUseCaseFactory().makeUpdateTaskUseCase()
   const loadTaskUseCase = getUseCaseFactory().makeLoadTaskUseCase()
+  const archiveTaskUseCase = getUseCaseFactory().makeArchiveTaskUseCase()
 
   loadTaskRoute(app, { useCases: { loadTask: loadTaskUseCase } })
   listTasksRoute(app, { useCases: { listTasks: listTasksUseCase } })
@@ -33,5 +35,8 @@ export const tasksRoutes = async (app: FastifyInstance) => {
   })
   deleteTaskRoute(app, {
     useCases: { deleteTask: deleteTaskUseCase },
+  })
+  archiveTaskRoute(app, {
+    useCases: { archivedTask: archiveTaskUseCase },
   })
 }

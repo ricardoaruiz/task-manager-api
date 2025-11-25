@@ -16,6 +16,7 @@ import {
   ListTasksUseCase,
   UpdateTaskUseCase,
 } from '../tasks'
+import { ArchivedTaskUseCase } from '../tasks/archive-task.use-case'
 import { LoadTaskUseCase } from '../tasks/load-task.use-case'
 import { UnCompleteTaskUseCase } from '../tasks/uncomplete-task.use-case'
 import type { UseCaseFactory } from './use-case-interface-factory'
@@ -87,5 +88,9 @@ export class InMemoryUseCaseFactory implements UseCaseFactory {
 
   makeLoadTaskUseCase(): LoadTaskUseCase {
     return new LoadTaskUseCase(this.tasksRespoitory)
+  }
+
+  makeArchiveTaskUseCase(): ArchivedTaskUseCase {
+    return new ArchivedTaskUseCase(this.tasksRespoitory)
   }
 }
