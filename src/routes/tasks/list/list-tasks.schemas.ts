@@ -7,6 +7,11 @@ export const ListTaskQueryStringSchema = z4.object({
     .enum(['completed', 'pending'])
     .optional()
     .describe('Filter by task status'),
+  isArchived: z4
+    .enum(['true', 'false'])
+    .optional()
+    .default('false')
+    .describe('Filter by archived tasks'),
   page: z4.coerce.number().optional().describe('Page number for pagination'),
   itemsPerPage: z4.coerce
     .number()
